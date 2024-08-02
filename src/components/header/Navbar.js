@@ -1,4 +1,5 @@
-import React from "react";
+// Navbar.js
+import React from 'react';
 import { Nav, TopBar, BottomBar, Logo, Menu, NavItem, UserProfile, Divider } from './NavbarStyles';
 import icon from '../../assets/images/icon.png';
 
@@ -15,10 +16,10 @@ const Navbar = () => {
             <Divider />
             <BottomBar>
                 <Logo>
-                    <a href="/dashBoard">엄김조</a>
+                    <a href="/">엄김조</a>
                 </Logo>
                 <Menu>
-                    <NavItem href="/dashBoard">
+                    <NavItem href="/">
                         <img src={icon} alt="대시보드" /> 대시보드
                     </NavItem>
                     <NavItem href="/commute">

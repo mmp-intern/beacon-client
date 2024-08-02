@@ -1,4 +1,5 @@
-import styled from "styled-components";
+// NavbarStyles.js
+import styled from 'styled-components';
 
 export const Nav = styled.nav`
     background-color: #2f5a98;

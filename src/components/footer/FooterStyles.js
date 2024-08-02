@@ -1,4 +1,5 @@
-import styled from "styled-components";
+// FooterStyles.js
+import styled from 'styled-components';
 
 export const FooterContainer = styled.footer`
     width: 100%;
