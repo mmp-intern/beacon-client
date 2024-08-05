@@ -103,7 +103,7 @@ const Statistics = () => {
 
     const mainContent = (
         <div>
-            <Title>통근 통계</Title>
+            <Title>특정 기간 근태 통계</Title>
             <SearchBarWithPeriod
                 searchBy={searchBy}
                 setSearchBy={setSearchBy}
