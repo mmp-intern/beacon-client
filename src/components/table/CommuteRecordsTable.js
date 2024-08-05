@@ -38,15 +38,16 @@ const CommuteRecordsTable = ({ data, sortConfig, handleSort, currentPage, handle
                 </thead>
                 <tbody>
                     {currentData.map((item, index) => (
-                        <tr key={item.user.id}>
+                        // 사용되는 키를 item.commute.id로 변경하여 고유성 보장
+                        <tr key={item.commute.id}>
                             <td>{index + 1 + currentPage * pageSize}</td>
                             <td>{item.user.userId}</td>
                             <td>{item.user.name}</td>
-                            <td>{item.commute ? item.commute.date : '-'}</td>
-                            <td>{item.commute ? item.commute.startTime : '-'}</td>
-                            <td>{item.commute ? item.commute.endTime : '-'}</td>
-                            <td>{item.commute ? item.commute.attendanceStatus : '-'}</td>
-                            <td>{item.commute ? item.commute.workStatus : '-'}</td>
+                            <td>{item.commute.date}</td>
+                            <td>{item.commute.startTime}</td>
+                            <td>{item.commute.endTime}</td>
+                            <td>{item.commute.attendanceStatus}</td>
+                            <td>{item.commute.workStatus}</td>
                         </tr>
                     ))}
                 </tbody>

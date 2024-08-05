@@ -1,4 +1,3 @@
-// Pagination.js
 import React from 'react';
 import { PageButton, PaginationContainer, PageText } from './PaginationStyles';
 

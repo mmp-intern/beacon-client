@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
-import CommuteRecordsTable from '../../components/table/CommuteRecordsTable'; // 새로운 테이블 컴포넌트 사용
+import CommuteRecordsTable from '../../components/table/CommuteRecordsTable';
 import SearchBarWithPeriod from '../../components/searchbar/SearchBarWithPeriod';
 import API_BASE_URL from '../../config';
 import {
@@ -32,13 +32,13 @@ const CommuteRecords = () => {
     const [pageSize, setPageSize] = useState(10);
     const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
 
-    const fetchData = async () => {
+    const fetchData = async (newPage = currentPage) => {
         const { column, direction } = sortConfig;
         const sortParam = column && direction ? `&sort=${column},${direction}` : '';
 
         try {
             const response = await fetch(
-                `${API_BASE_URL}/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `${API_BASE_URL}/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${newPage}&size=${pageSize}${sortParam}`
             );
 
             if (!response.ok) {
@@ -47,28 +47,34 @@ const CommuteRecords = () => {
 
             const result = await response.json();
             console.log('Fetched data:', result);
-            setData(result);
+            setData(result); // 새로운 데이터로 덮어씌우기
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
     useEffect(() => {
-        fetchData();
-    }, [currentPage, pageSize, sortConfig]);
+        fetchData(0); // 페이지를 변경할 때 데이터를 새로 가져오도록 설정
+    }, [searchTerm, searchBy, startDate, endDate, pageSize, sortConfig]);
+
+    useEffect(() => {
+        fetchData(); // 페이지 변경 시 데이터를 새로 가져오도록 설정
+    }, [currentPage]);
 
     const handleSearch = () => {
         setCurrentPage(0);
-        fetchData();
+        fetchData(0); // 검색 시 첫 페이지의 데이터를 가져오도록 설정
     };
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
+        fetchData(newPage); // 페이지 변경 시 해당 페이지의 데이터를 가져오도록 설정
     };
 
     const handlePageSizeChange = (e) => {
         setPageSize(Number(e.target.value));
         setCurrentPage(0);
+        fetchData(0); // 페이지 크기 변경 시 첫 페이지의 데이터를 가져오도록 설정
     };
 
     const handleSort = (column) => {
@@ -83,6 +89,7 @@ const CommuteRecords = () => {
         }
         setSortConfig({ column, direction });
         setCurrentPage(0);
+        fetchData(0); // 정렬 변경 시 첫 페이지의 데이터를 가져오도록 설정
     };
 
     const leftContent = (
