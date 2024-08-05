@@ -1,4 +1,5 @@
-import styled from "styled-components";
+// LayoutStyles.js
+import styled from 'styled-components';
 
 export const MainContainer = styled.div`
     display: flex;

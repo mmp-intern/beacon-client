@@ -1,32 +1,21 @@
 import React from 'react';
-import Navbar from './components/header/Navbar';
-import Footer from './components/footer/Footer';
-import { MainContainer, LeftSidebar, ContentArea, RightSpace } from './components/layout/LayoutStyles';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Dashboard from './pages/dashboard/Dashboard';
+import Commute from './pages/commute/Commute';
+import Statistics from './pages/commuteStatistics/Statistics';
+import CommuteRecords from './pages/commute/CommuteRecords';
 
 const App = () => {
-  return (
-    <div className="App">
-      <Navbar />
-      <MainContainer>
-        <LeftSidebar>
-          <h3>업무관리</h3>
-          <ul>
-            <li>업무현황</li>
-            <li>업무일지</li>
-            <li>업무일지작성</li>
-            <li>외근일지</li>
-            <li>외근일지작성</li>
-          </ul>
-        </LeftSidebar>
-        <ContentArea>
-          <h1>업무현황</h1>
-          <p>업무관리 &gt; 업무현황</p>
-        </ContentArea>
-        <RightSpace />
-      </MainContainer>
-      <Footer />
-    </div>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/commute" element={<Commute />} />
+                <Route path="/statistics" element={<Statistics />} />
+                <Route path="/commute-records" element={<CommuteRecords />} />
+            </Routes>
+        </Router>
+    );
 };
 
 export default App;
