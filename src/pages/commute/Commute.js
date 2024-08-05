@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteTable from '../../components/table/CommuteTable';
-import SearchBar from '../../components/searchbar/SearchBar';
+import SearchBarWithDate from '../../components/searchbar/SearchBarWithDate';
 import API_BASE_URL from '../../config';
 import {
     Title,
@@ -10,13 +10,20 @@ import {
     PageSizeContainer,
     PageSizeLabel,
     PageSizeSelect,
+    StyledNavLink,
 } from '../../styles/common/Typography';
 
-const Dashboard = () => {
+const Commute = () => {
+    const getCurrentDate = () => {
+        const now = new Date();
+        return now.toISOString().split('T')[0];
+    };
+
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
     const [searchTerm, setSearchTerm] = useState('');
     const [searchBy, setSearchBy] = useState('id');
+    const [date, setDate] = useState(getCurrentDate());
     const [pageSize, setPageSize] = useState(10);
     const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
 
@@ -26,7 +33,7 @@ const Dashboard = () => {
 
         try {
             const response = await fetch(
-                `${API_BASE_URL}/commutes/daliy?searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `${API_BASE_URL}/commutes/daliy?date=${date}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
 
             if (!response.ok) {
@@ -34,6 +41,7 @@ const Dashboard = () => {
             }
 
             const result = await response.json();
+            console.log('Fetched data:', result);
             setData(result);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -61,7 +69,12 @@ const Dashboard = () => {
     const handleSort = (column) => {
         let direction = 'asc';
         if (sortConfig.column === column) {
-            direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+            if (sortConfig.direction === 'asc') {
+                direction = 'desc';
+            } else {
+                column = null;
+                direction = null;
+            }
         }
         setSortConfig({ column, direction });
         setCurrentPage(0);
@@ -69,26 +82,37 @@ const Dashboard = () => {
 
     const leftContent = (
         <div>
-            <SubTitle>대시보드</SubTitle>
+            <SubTitle>통근 관리</SubTitle>
             <Divider />
+            <StyledNavLink to="/commute" activeClassName="active">
+                특정 날짜 근태
+            </StyledNavLink>
+            <StyledNavLink to="/commute-records" activeClassName="active">
+                특정 기간 근태
+            </StyledNavLink>
+            <StyledNavLink to="/statistics" activeClassName="active">
+                특정 기간 근태 통계
+            </StyledNavLink>
         </div>
     );
 
     const mainContent = (
         <div>
-            <Title>대시보드</Title>
-            <SearchBar
+            <Title>특정 날짜 근태</Title>
+            <SearchBarWithDate
                 searchBy={searchBy}
                 setSearchBy={setSearchBy}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                date={date}
+                setDate={setDate}
                 handleSearch={handleSearch}
             />
             <PageSizeContainer>
                 <PageSizeLabel>페이지당</PageSizeLabel>
                 <PageSizeSelect value={pageSize} onChange={handlePageSizeChange}>
                     <option value={10}>10</option>
-                    <option value={25}>25}</option>
+                    <option value={25}>25</option>
                     <option value={50}>50</option>
                     <option value={100}>100</option>
                 </PageSizeSelect>
@@ -108,4 +132,4 @@ const Dashboard = () => {
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
-export default Dashboard;
+export default Commute;
