@@ -44,3 +44,29 @@ export const SortArrowDown = styled.div`
     transition: border-top-color 0.3s, opacity 0.3s;
     margin-top: 2px;
 `;
+
+export const UserProfileTableContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+`;
+
+export const UserProfileTable = styled.table`
+    width: 50%;
+    border-collapse: collapse;
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+        width: 30%;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+`;
