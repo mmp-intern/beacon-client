@@ -4,25 +4,26 @@ import UserProfileTableComponent from '../../components/table/UserProfileTable';
 import { Title, SubTitle, Divider } from '../../styles/common/Typography';
 import { useParams } from 'react-router-dom';
 import apiClient from '../../apiClient';
+import DeleteButton from '../../components/deletebutton/DeleteButton'; 
+import { useAuth } from '../../AuthContext';
 
 const UserProfile = () => {
     const { userId } = useParams();
+    const { user: authUser, apiClient } = useAuth();
     const [user, setUser] = useState({
         userId: '',
         name: '',
         phoneNumber: '',
         email: '',
         position: '',
+        role: '', // 사용자 역할 추가
     });
 
     const fetchUserData = async () => {
         try {
             const response = await apiClient(`/profile/${userId}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            setUser(result);
+            console.log('API Response:', response); // 응답 로그 확인
+            setUser(response.data); // 응답 데이터를 상태로 설정
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -43,6 +44,9 @@ const UserProfile = () => {
         <div>
             <Title>회원 정보 조회</Title>
             <UserProfileTableComponent user={user} />
+            {(authUser && (authUser.role === 'SUPER_ADMIN' || authUser.role === 'ADMIN')) && (
+                <DeleteButton userId={user.userId} /> // 삭제 버튼 추가
+            )}
         </div>
     );
 

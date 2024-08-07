@@ -68,3 +68,4 @@ export const Divider = styled.div`
     height: 0.5px;
     background-color: black;
 `;
+

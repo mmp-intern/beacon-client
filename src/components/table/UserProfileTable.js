@@ -8,6 +8,7 @@ const UserProfileTableComponent = ({ user }) => {
         { key: 'phone', label: '휴대폰 번호' },
         { key: 'email', label: '이메일' },
         { key: 'position', label: '직책' },
+        { key: 'role', label: '권한' },
     ];
 
     return (

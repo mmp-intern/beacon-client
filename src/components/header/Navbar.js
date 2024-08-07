@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'; // useNavigate 추가
 
 
 
+
 const Navbar = () => {
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
