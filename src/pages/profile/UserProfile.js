@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import apiClient from '../../apiClient';
 import DeleteButton from '../../components/deletebutton/DeleteButton'; 
 import { useAuth } from '../../AuthContext';
+import { SearchContainer } from '../../components/searchbar/SearchBarStyles';
 
 const UserProfile = () => {
     const { userId } = useParams();
@@ -45,7 +46,9 @@ const UserProfile = () => {
             <Title>회원 정보 조회</Title>
             <UserProfileTableComponent user={user} />
             {(authUser && (authUser.role === 'SUPER_ADMIN' || authUser.role === 'ADMIN')) && (
-                <DeleteButton userId={user.userId} /> // 삭제 버튼 추가
+            <SearchContainer>
+            <DeleteButton userId={user.userId} /> {/* 삭제 버튼 중앙에 배치 */}
+            </SearchContainer>
             )}
         </div>
     );

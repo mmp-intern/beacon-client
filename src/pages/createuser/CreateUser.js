@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
-import { Label, Input, Button } from '../../components/register/AdminStyles';
+import { Label, Input, Button, FormContainer, ButtonContainer  } from '../../components/register/AdminStyles';
 import { useAuth } from '../../AuthContext';
 
 const CreateUser = () => {
@@ -71,83 +71,70 @@ const CreateUser = () => {
     );
 
     const mainContent = (
-        <div>
+        <FormContainer>
             <Title>사용자 계정 생성</Title>
             <form onSubmit={handleSubmit}>
-            
-                <div>
-                    <Label>사용자 ID</Label>
-                    <Input
-                        type="text"
-                        name="userId"
-                        value={userData.userId}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <Label>비밀번호</Label>
-                    <Input
-                        type="password"
-                        name="password"
-                        value={userData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <Label>이름</Label>
-                    <Input
-                        type="text"
-                        name="name"
-                        value={userData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <Label>이메일</Label>
-                    <Input
-                        type="email"
-                        name="email"
-                        value={userData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <Label>전화번호</Label>
-                    <Input
-                        type="text"
-                        name="phone"
-                        value={userData.phone}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <Label>직책</Label>
-                    <Input
-                        type="text"
-                        name="position"
-                        value={userData.position}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <Label>회사</Label>
-                    <Input
-                        type="text"
-                        name="company"
-                        value={userData.company}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <Button type="submit">계정 생성</Button>
+                <Label>사용자 ID</Label>
+                <Input
+                    type="text"
+                    name="userId"
+                    value={userData.userId}
+                    onChange={handleChange}
+                    required
+                />
+                <Label>비밀번호</Label>
+                <Input
+                    type="password"
+                    name="password"
+                    value={userData.password}
+                    onChange={handleChange}
+                    required
+                />
+                <Label>이름</Label>
+                <Input
+                    type="text"
+                    name="name"
+                    value={userData.name}
+                    onChange={handleChange}
+                    required
+                />
+                <Label>이메일</Label>
+                <Input
+                    type="email"
+                    name="email"
+                    value={userData.email}
+                    onChange={handleChange}
+                    required
+                />
+                <Label>전화번호</Label>
+                <Input
+                    type="text"
+                    name="phone"
+                    value={userData.phone}
+                    onChange={handleChange}
+                    required
+                />
+                <Label>직책</Label>
+                <Input
+                    type="text"
+                    name="position"
+                    value={userData.position}
+                    onChange={handleChange}
+                    required
+                />
+                <Label>회사</Label>
+                <Input
+                    type="text"
+                    name="company"
+                    value={userData.company}
+                    onChange={handleChange}
+                    required
+                />
+                <ButtonContainer>
+                    <Button type="submit">계정 생성</Button>
+                </ButtonContainer>
             </form>
-        </div>
+        </FormContainer>
     );
 
     return <Layout leftContent={leftContent} mainContent={mainContent} />;

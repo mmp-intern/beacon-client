@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
-import { Button } from '../register/AdminStyles'; // 버튼 스타일 가져오기
+import { SearchButton } from '../searchbar/SearchBarStyles'; // 버튼 스타일 가져오기
 
 const DeleteButton = ({ userId }) => {
     const navigate = useNavigate();
@@ -17,18 +17,15 @@ const DeleteButton = ({ userId }) => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             alert('사용자 삭제 완료');
-            navigate('/commute'); 
+            navigate('/'); 
         } catch (error) {
             console.error('Error deleting user:', error);
-            if (error.response && error.response.status === 404) {
-                alert('사용자를 찾을 수 없습니다.');
-            } else {
-                alert('사용자 삭제에 실패했습니다.');
-            }
+            const errorMessage = error.response?.data?.message || error.message || '사용자 삭제에 실패했습니다.';
+            alert(`사용자 삭제에 실패했습니다: ${errorMessage}`);
         }
     };
 
-    return <Button onClick={handleDeleteUser}>사용자 삭제</Button>;
+    return <SearchButton onClick={handleDeleteUser}>사용자 삭제</SearchButton>;
 };
 
 export default DeleteButton;

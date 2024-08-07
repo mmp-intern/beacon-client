@@ -1,7 +1,7 @@
 // Navbar.js
 import React, { useEffect, useState } from 'react';
 import { removeCookie } from '../../cookie'; // 쿠키 제거 함수를 불러옵니다.
-import { Nav, TopBar, BottomBar, Logo, Menu, NavItem, UserProfile, Divider } from './NavbarStyles';
+import { Nav, TopBar, BottomBar, Logo, Menu, NavItem, UserProfile, Divider, LogoutButton } from './NavbarStyles';
 import icon from '../../assets/images/icon.png';
 import apiClient from '../../apiClient';
 import { useNavigate } from 'react-router-dom'; // useNavigate 추가
@@ -52,7 +52,7 @@ const Navbar = () => {
                             ) : (
                                 <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>{profile.name} {profile.role} 님</span>
                             )}
-                            <button id="logout" onClick={handleLogout}>로그아웃</button>
+                             <LogoutButton id="logout" onClick={handleLogout}>로그아웃</LogoutButton>
                         </>
                     ) : (
                         <span>Loading...</span>

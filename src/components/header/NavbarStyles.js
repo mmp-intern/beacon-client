@@ -69,3 +69,16 @@ export const Divider = styled.div`
     background-color: black;
 `;
 
+export const LogoutButton = styled.button`
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: #1f4c89;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+    
+    &:hover {
+        background-color: #1f4c89;
+    }
+`;
