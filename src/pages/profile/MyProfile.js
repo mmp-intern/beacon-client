@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import UserProfileTableComponent from '../../components/table/UserProfileTable';
-import API_BASE_URL from '../../config';
+import { useAuth } from '../../AuthContext';
 import { Title, SubTitle, Divider } from '../../styles/common/Typography';
 
 const MyProfile = () => {
-    const [user, setUser] = useState({
+    const { user, apiClient } = useAuth();
+    const [profile, setProfile] = useState({
         userId: '',
         name: '',
         phoneNumber: '',
@@ -13,21 +14,21 @@ const MyProfile = () => {
         position: '',
     });
 
-    const fetchUserData = async () => {
+    const fetchProfileData = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/profile/me`);
+            const response = await apiClient.get('/profile/me');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
-            setUser(result);
+            setProfile(result);
         } catch (error) {
-            console.error('Error fetching user data:', error);
+            console.error('Error fetching profile data:', error);
         }
     };
 
     useEffect(() => {
-        fetchUserData();
+        fetchProfileData();
     }, []);
 
     const leftContent = (
@@ -40,7 +41,7 @@ const MyProfile = () => {
     const mainContent = (
         <div>
             <Title>마이페이지</Title>
-            <UserProfileTableComponent user={user} />
+            <UserProfileTableComponent user={profile} />
         </div>
     );
 

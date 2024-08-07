@@ -9,23 +9,35 @@ import CreateAdmin from './pages/createadmin/CreateAdmin';
 import CreateUser from './pages/createuser/CreateUser';
 import UserProfile from './pages/profile/UserProfile';
 import MyProfile from './pages/profile/MyProfile';
+import PrivateRoute from './PrivateRoute';
+import AuthProvider from './AuthContext';
 
 const App = () => {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/commute" element={<Commute />} />
-                <Route path="/statistics" element={<Statistics />} />
-                <Route path="/commute-records" element={<CommuteRecords />} />
-                <Route path="/profile/:userId" element={<UserProfile />} />
-                <Route path="/mypage" element={<MyProfile />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/admin" element={<CreateAdmin />} />
-                <Route path="/users" element={<CreateUser />} />
-            </Routes>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/commute" element={<Commute />} />
+                        <Route path="/statistics" element={<Statistics />} />
+                        <Route path="/commute-records" element={<CommuteRecords />} />
+                        <Route path="/profile/:userId" element={<UserProfile />} />
+                    </Route>
+                    <Route element={<PrivateRoute roles={['employee']} />}>
+                        <Route path="/mypage" element={<MyProfile />} />
+                    </Route>
+                    <Route element={<PrivateRoute roles={['superadmin']} />}>
+                        <Route path="/admin" element={<CreateAdmin />} />
+                    </Route>
+                    <Route element={<PrivateRoute roles={['superadmin', 'admin']} />}>
+                        <Route path="/users" element={<CreateUser />} />
+                    </Route>
+                </Routes>
+            </Router>
+        </AuthProvider>
     );
 };
 
-export default App;  
+export default App;

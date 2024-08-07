@@ -1,42 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setCookie } from '../../cookie';
-import {
-    LoginContainer,
-    LoginTitle,
-    LoginForm,
-    LoginInput,
-    LoginButton
-} from './LoginStyles';
-import apiClient from '../../apiClient';
-
+import { useAuth } from '../../AuthContext';
+import { LoginContainer, LoginTitle, LoginForm, LoginInput, LoginButton } from './LoginStyles';
 
 const Login = () => {
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
-    console.log("Login component rendered");
+    const { login } = useAuth();
 
     const handleLogin = async () => {
         try {
-            const response = await apiClient.post('/login', {
-                userId,
-                password,
-            });
-
-            console.log('Response:', response.data);
-
-            if (response.data && response.data.accessToken) {
-                setCookie('accessToken', response.data.accessToken, { path: '/' });
-                console.log(response.data.accessToken);
-                setCookie('refreshToken', response.data.refreshToken, { path: '/' });
-                console.log(response.data.refreshToken);
-                alert('로그인 성공');
-                navigate('/'); // 로그인 성공 후 대시보드 페이지로 리다이렉트
-            } else {
-                alert('로그인 실패: 토큰이 반환되지 않았습니다.');
-            }
+            await login({ userId, password });
+            alert('로그인 성공');
+            navigate('/');
         } catch (error) {
             console.error('로그인 실패', error);
             alert('로그인 실패: 사용자 ID 또는 비밀번호가 잘못되었습니다.');

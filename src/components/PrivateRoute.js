@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { getCookie } from '../cookie';
 
 const PrivateRoute = ({ roles }) => {
-    const { user } = useAuth();
+    const user = JSON.parse(getCookie('user'));
 
     if (!user) {
         return <Navigate to="/login" />;
