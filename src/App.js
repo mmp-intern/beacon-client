@@ -73,7 +73,7 @@ const App = () => {
                         }
                     />
                     <Route
-                        path="/mypage"
+                        path="/profile/me"
                         element={
                             <PrivateRoute roles={['USER']}>
                                 <MyProfile />

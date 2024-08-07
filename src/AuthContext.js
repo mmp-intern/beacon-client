@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
         removeCookie('refresh_token');
     };
 
-    return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, login, logout, apiClient }}>{children}</AuthContext.Provider>;
 };
 
 const saveTokens = (accessToken, refreshToken) => {

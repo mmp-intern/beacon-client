@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import UserProfileTableComponent from '../../components/table/UserProfileTable';
-import { useAuth } from '../../AuthContext';
 import { Title, SubTitle, Divider } from '../../styles/common/Typography';
+import { useParams } from 'react-router-dom';
+import apiClient from '../../apiClient';
 
 const UserProfile = () => {
     const { userId } = useParams();
-    const { apiClient } = useAuth();
     const [user, setUser] = useState({
         userId: '',
         name: '',
@@ -18,7 +17,7 @@ const UserProfile = () => {
 
     const fetchUserData = async () => {
         try {
-            const response = await apiClient.get(`/profile/${userId}`);
+            const response = await apiClient(`/profile/${userId}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

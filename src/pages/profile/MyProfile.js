@@ -6,10 +6,11 @@ import { Title, SubTitle, Divider } from '../../styles/common/Typography';
 
 const MyProfile = () => {
     const { user, apiClient } = useAuth();
+    console.log('apiClient:', apiClient);
     const [profile, setProfile] = useState({
         userId: '',
         name: '',
-        phoneNumber: '',
+        phone: '',
         email: '',
         position: '',
     });
@@ -17,11 +18,8 @@ const MyProfile = () => {
     const fetchProfileData = async () => {
         try {
             const response = await apiClient.get('/profile/me');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            setProfile(result);
+            console.log('API Response:', response); // API 응답 로그
+            setProfile(response.data); // 응답 데이터를 상태로 설정
         } catch (error) {
             console.error('Error fetching profile data:', error);
         }
