@@ -8,7 +8,8 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
         const token = getCookie('access_token');
         if (token) {
-            return JSON.parse(atob(token.split('.')[1])).user;
+            const userData = JSON.parse(atob(token.split('.')[1]));
+            return { ...userData.user, role: userData.role };
         }
         return null;
     });
@@ -16,7 +17,7 @@ const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
         const response = await apiClient.post('/login', credentials);
         const { accessToken, refreshToken, user } = response.data;
-        setUser(user);
+        setUser({ ...user, role: response.data.role });
         saveTokens(accessToken, refreshToken);
     };
 
