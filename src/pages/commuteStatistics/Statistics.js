@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteStatsTable from '../../components/table/CommuteStatsTable';
 import SearchBarWithPeriod from '../../components/searchbar/SearchBarWithPeriod';
-import API_BASE_URL from '../../config';
 import {
     Title,
     SubTitle,
@@ -12,6 +11,7 @@ import {
     PageSizeSelect,
     StyledNavLink,
 } from '../../styles/common/Typography';
+import apiClient from '../../apiClient';
 
 const Statistics = () => {
     const getCurrentMonthDates = () => {
@@ -37,8 +37,8 @@ const Statistics = () => {
         const sortParam = column && direction ? `&sort=${column},${direction}` : '';
 
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/commutes/statistics?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+            const response = await apiClient.get(
+                `/commutes/statistics?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
 
             if (!response.ok) {

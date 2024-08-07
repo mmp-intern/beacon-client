@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteTable from '../../components/table/CommuteTable';
 import SearchBarWithDate from '../../components/searchbar/SearchBarWithDate';
-import API_BASE_URL from '../../config';
 import {
     Title,
     SubTitle,
@@ -12,6 +11,7 @@ import {
     PageSizeSelect,
     StyledNavLink,
 } from '../../styles/common/Typography';
+import apiClient from '../../apiClient';
 
 const Commute = () => {
     const getCurrentDate = () => {
@@ -32,8 +32,8 @@ const Commute = () => {
         const sortParam = column && direction ? `&sort=${column},${direction}` : '';
 
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/commutes/daliy?date=${date}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+            const response = await apiClient.get(
+                `/commutes/daliy?date=${date}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
 
             if (!response.ok) {
