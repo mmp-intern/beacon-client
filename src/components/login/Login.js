@@ -23,7 +23,7 @@ const Login = () => {
     return (
         <LoginContainer>
             <LoginTitle>엄김조</LoginTitle>
-            <LoginForm>
+           
                 <LoginInput
                     type="text"
                     value={userId}
@@ -39,7 +39,7 @@ const Login = () => {
                 <LoginButton type="button" onClick={handleLogin}>
                     로그인
                 </LoginButton>
-            </LoginForm>
+           
         </LoginContainer>
     );
 };

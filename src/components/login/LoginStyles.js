@@ -6,22 +6,13 @@ export const LoginContainer = styled.div`
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #2e3b4e;
+    background: linear-gradient(to bottom, #3a4e63, #2c3e50); /* 예시 색상입니다. */
 `;
 
 export const LoginTitle = styled.h1`
     margin-bottom: 20px;
     font-size: 36px;
     color: white;
-`;
-
-export const LoginForm = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 40px;
-    border-radius: 10px;
 `;
 
 export const LoginInput = styled.input`
@@ -45,7 +36,7 @@ export const LoginInput = styled.input`
 `;
 
 export const LoginButton = styled.button`
-    width: 100%;
+    width: 330px;
     padding: 15px;
     margin-top: 20px;
     border: none;
@@ -60,4 +51,3 @@ export const LoginButton = styled.button`
         background-color: #1c7ed6;
     }
 `;
-
