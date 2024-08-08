@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteRecordsTable from '../../components/table/CommuteRecordsTable';
 import SearchBarWithPeriod from '../../components/searchbar/SearchBarWithPeriod';
-import API_BASE_URL from '../../config';
 import {
     Title,
     SubTitle,
@@ -12,6 +11,7 @@ import {
     PageSizeSelect,
     StyledNavLink,
 } from '../../styles/common/Typography';
+import apiClient from '../../apiClient';
 
 const CommuteRecords = () => {
     const getCurrentMonthDates = () => {
@@ -37,8 +37,8 @@ const CommuteRecords = () => {
         const sortParam = column && direction ? `&sort=${column},${direction}` : '';
 
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${newPage}&size=${pageSize}${sortParam}`
+            const response = await apiClient.get(
+                `/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${newPage}&size=${pageSize}${sortParam}`
             );
 
             if (!response.ok) {

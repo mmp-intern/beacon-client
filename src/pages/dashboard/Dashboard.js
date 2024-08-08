@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteTable from '../../components/table/CommuteTable';
 import SearchBar from '../../components/searchbar/SearchBar';
-import API_BASE_URL from '../../config';
 import {
     Title,
     SubTitle,
@@ -11,6 +10,7 @@ import {
     PageSizeLabel,
     PageSizeSelect,
 } from '../../styles/common/Typography';
+import apiClient from '../../apiClient';
 
 const Dashboard = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -25,8 +25,8 @@ const Dashboard = () => {
         const sortParam = column && direction ? `&sort=${column},${direction}` : '';
 
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/commutes/daliy?searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+            const response = await apiClient.get(
+                `/commutes/daliy?searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
 
             if (!response.ok) {

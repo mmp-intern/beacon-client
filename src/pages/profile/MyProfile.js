@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import UserProfileTableComponent from '../../components/table/UserProfileTable';
-import API_BASE_URL from '../../config';
+import { useAuth } from '../../AuthContext';
 import { Title, SubTitle, Divider } from '../../styles/common/Typography';
 
 const MyProfile = () => {
-    const [user, setUser] = useState({
+    const { user, apiClient } = useAuth();
+    console.log('apiClient:', apiClient);
+    const [profile, setProfile] = useState({
         userId: '',
         name: '',
-        phoneNumber: '',
+        phone: '',
         email: '',
         position: '',
     });
 
-    const fetchUserData = async () => {
+    const fetchProfileData = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/profile/me`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            setUser(result);
+            const response = await apiClient.get('/profile/me');
+            console.log('API Response:', response); // API 응답 로그
+            setProfile(response.data); // 응답 데이터를 상태로 설정
         } catch (error) {
-            console.error('Error fetching user data:', error);
+            console.error('Error fetching profile data:', error);
         }
     };
 
     useEffect(() => {
-        fetchUserData();
+        fetchProfileData();
     }, []);
 
     const leftContent = (
@@ -40,7 +39,7 @@ const MyProfile = () => {
     const mainContent = (
         <div>
             <Title>마이페이지</Title>
-            <UserProfileTableComponent user={user} />
+            <UserProfileTableComponent user={profile} />
         </div>
     );
 
