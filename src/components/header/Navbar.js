@@ -6,10 +6,6 @@ import icon from '../../assets/images/icon.png';
 import apiClient from '../../apiClient';
 import { useNavigate } from 'react-router-dom'; // useNavigate 추가
 
-
-
-
-
 const Navbar = () => {
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
@@ -18,7 +14,7 @@ const Navbar = () => {
             try {
                 const response = await apiClient.get('/profile/me');
                 console.log(response.data);
-                
+
                 setProfile(response.data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
@@ -45,19 +41,24 @@ const Navbar = () => {
             <TopBar>
                 <div>MMP</div>
                 <UserProfile>
-                {profile ? (
+                    {profile ? (
                         <>
                             {profile.role === '슈퍼관리자' || profile.role === '관리자' ? (
-                              <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>{profile.role}</span>
+                                <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>
+                                    {profile.role}
+                                </span>
                             ) : (
-                                <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>{profile.name} {profile.role} 님</span>
+                                <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>
+                                    {profile.name} {profile.role} 님
+                                </span>
                             )}
-                             <LogoutButton id="logout" onClick={handleLogout}>로그아웃</LogoutButton>
+                            <LogoutButton id="logout" onClick={handleLogout}>
+                                로그아웃
+                            </LogoutButton>
                         </>
                     ) : (
                         <span>Loading...</span>
                     )}
-
                 </UserProfile>
             </TopBar>
             <Divider />
@@ -67,13 +68,10 @@ const Navbar = () => {
                 </Logo>
                 <Menu>
                     <NavItem href="/">
-                        <img src={icon} alt="대시보드" /> 대시보드
-                    </NavItem>
-                    <NavItem href="/commute">
                         <img src={icon} alt="통근관리" /> 통근관리
                     </NavItem>
-                   
-                    {(profile && (profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN')) && (
+
+                    {profile && (profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN') && (
                         <NavItem href="/users">
                             <img src={icon} alt="회원관리" /> 회원관리
                         </NavItem>

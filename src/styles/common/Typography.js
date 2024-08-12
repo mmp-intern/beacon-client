@@ -53,6 +53,7 @@ export const StyledNavLink = styled(RouterNavLink)`
     text-decoration: none;
     padding: 10px;
     border-radius: 4px;
+    color: #000;
 
     &.active {
         background-color: #e0e0e0;
