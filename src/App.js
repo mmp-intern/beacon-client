@@ -2,10 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import AuthProvider from './AuthContext';
-import Dashboard from './pages/dashboard/Dashboard';
-import Commute from './pages/commute/Commute';
-import Statistics from './pages/commuteStatistics/Statistics';
-import CommuteRecords from './pages/commute/CommuteRecords';
+import DailyStatus from './pages/commute/DailyStatus';
+import CommuteStatistics from './pages/commute/CommuteStatistics';
 import LoginPage from './pages/loginform/LoginPage';
 import CreateAdmin from './pages/createadmin/CreateAdmin';
 import CreateUser from './pages/createuser/CreateUser';
@@ -36,31 +34,31 @@ const App = () => {
                         path="/"
                         element={
                             <PrivateRoute>
-                                <Dashboard />
+                                <DailyStatus />
                             </PrivateRoute>
                         }
                     />
                     <Route
-                        path="/commute"
+                        path="/commute-week"
                         element={
                             <PrivateRoute>
-                                <Commute />
+                                <CommuteStatistics period="week" />
                             </PrivateRoute>
                         }
                     />
                     <Route
-                        path="/statistics"
+                        path="/commute-month"
                         element={
                             <PrivateRoute>
-                                <Statistics />
+                                <CommuteStatistics period="month" />
                             </PrivateRoute>
                         }
                     />
                     <Route
-                        path="/commute-records"
+                        path="/commute-year"
                         element={
                             <PrivateRoute>
-                                <CommuteRecords />
+                                <CommuteStatistics period="year" />
                             </PrivateRoute>
                         }
                     />
