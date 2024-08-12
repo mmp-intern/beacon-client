@@ -5,9 +5,10 @@ const UserProfileTableComponent = ({ user }) => {
     const fields = [
         { key: 'userId', label: '아이디' },
         { key: 'name', label: '이름' },
-        { key: 'phoneNumber', label: '휴대폰 번호' },
+        { key: 'phone', label: '휴대폰 번호' },
         { key: 'email', label: '이메일' },
         { key: 'position', label: '직책' },
+        { key: 'role', label: '권한' },
     ];
 
     return (
