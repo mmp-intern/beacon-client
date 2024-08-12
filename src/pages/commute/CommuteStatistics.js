@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteStatsTable from '../../components/table/CommuteStatsTable';
-import SearchBarWithPeriod from '../../components/searchbar/SearchBarWithPeriod';
+import SearchBarForWeek from '../../components/searchbar/SearchBarForWeek';
+import SearchBarForMonth from '../../components/searchbar/SearchBarForMonth';
+import SearchBarForYear from '../../components/searchbar/SearchBarForYear';
 import {
     Title,
     SubTitle,
@@ -14,55 +16,45 @@ import {
 import apiClient from '../../apiClient';
 
 const CommuteStatistics = ({ period }) => {
-    const getDateRange = () => {
-        const now = new Date();
-        let firstDay, lastDay;
-
-        switch (period) {
-            case 'week':
-                firstDay = new Date(now.setDate(now.getDate() - now.getDay()));
-                lastDay = new Date(now.setDate(now.getDate() - now.getDay() + 6));
-                break;
-            case 'month':
-                firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-                lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                break;
-            case 'year':
-                firstDay = new Date(now.getFullYear(), 0, 1);
-                lastDay = new Date(now.getFullYear(), 11, 31);
-                break;
-            default:
-                firstDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                lastDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                break;
-        }
-
-        return {
-            firstDay: firstDay.toISOString().split('T')[0],
-            lastDay: lastDay.toISOString().split('T')[0],
-        };
-    };
-
-    const { firstDay, lastDay } = getDateRange();
-
+    const now = new Date();
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
     const [searchTerm, setSearchTerm] = useState('');
     const [searchBy, setSearchBy] = useState('id');
-    const [startDate, setStartDate] = useState(firstDay);
-    const [endDate, setEndDate] = useState(lastDay);
     const [pageSize, setPageSize] = useState(10);
     const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
+
+    // 주간, 월간, 연간 설정에 따른 기본 날짜 또는 연도
+    const [startDate, setStartDate] = useState(
+        () => new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).toISOString().split('T')[0]
+    );
+    const [endDate, setEndDate] = useState(
+        () => new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 6).toISOString().split('T')[0]
+    );
+    const [selectedMonth, setSelectedMonth] = useState(
+        () => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    );
+    const [selectedYear, setSelectedYear] = useState(() => now.getFullYear());
 
     const fetchData = async () => {
         const { column, direction } = sortConfig;
         const sortParam = column && direction ? `&sort=${column},${direction}` : '';
 
         try {
-            const response = await apiClient.get(
-                `/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
-            );
-
+            let response;
+            if (period === 'week') {
+                response = await apiClient.get(
+                    `/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                );
+            } else if (period === 'month') {
+                response = await apiClient.get(
+                    `/commutes/records?month=${selectedMonth}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                );
+            } else if (period === 'year') {
+                response = await apiClient.get(
+                    `/commutes/records?year=${selectedYear}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                );
+            }
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -115,28 +107,60 @@ const CommuteStatistics = ({ period }) => {
         </div>
     );
 
+    const renderSearchBar = () => {
+        if (period === 'week') {
+            return (
+                <SearchBarForWeek
+                    searchBy={searchBy}
+                    setSearchBy={setSearchBy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    endDate={endDate}
+                    setEndDate={setEndDate}
+                    handleSearch={handleSearch}
+                />
+            );
+        } else if (period === 'month') {
+            return (
+                <SearchBarForMonth
+                    searchBy={searchBy}
+                    setSearchBy={setSearchBy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    selectedMonth={selectedMonth}
+                    setSelectedMonth={setSelectedMonth}
+                    handleSearch={handleSearch}
+                />
+            );
+        } else if (period === 'year') {
+            return (
+                <SearchBarForYear
+                    searchBy={searchBy}
+                    setSearchBy={setSearchBy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    selectedYear={selectedYear}
+                    setSelectedYear={setSelectedYear}
+                    handleSearch={handleSearch}
+                />
+            );
+        }
+    };
+
     const mainContent = (
         <div>
             <Title>{`${
                 period === 'day' ? '일일' : period === 'week' ? '주간' : period === 'month' ? '월간' : '연간'
-            }현황`}</Title>
-            <SearchBarWithPeriod
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                handleSearch={handleSearch}
-            />
+            } 현황`}</Title>
+            {renderSearchBar()}
             <PageSizeContainer>
                 <PageSizeLabel>페이지당</PageSizeLabel>
                 <PageSizeSelect value={pageSize} onChange={handlePageSizeChange}>
                     <option value={10}>10</option>
                     <option value={25}>25</option>
-                    <option value={50}>50</option>
+                    <option value={50}>50}</option>
                     <option value={100}>100</option>
                 </PageSizeSelect>
                 <PageSizeLabel>개씩 보기</PageSizeLabel>
