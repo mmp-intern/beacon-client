@@ -74,8 +74,13 @@ const Navbar = () => {
                     </NavItem>
                    
                     {(profile && (profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN')) && (
-                        <NavItem href="/users">
+                        <NavItem href="/userlist">
                             <img src={icon} alt="회원관리" /> 회원관리
+                        </NavItem>
+                    )}
+                    {(profile && (profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN')) && (
+                        <NavItem href="/beacon">
+                            <img src={icon} alt="비콘관리" /> 비콘관리
                         </NavItem>
                     )}
                 </Menu>

@@ -11,6 +11,10 @@ import CreateAdmin from './pages/createadmin/CreateAdmin';
 import CreateUser from './pages/createuser/CreateUser';
 import UserProfile from './pages/profile/UserProfile';
 import MyProfile from './pages/profile/MyProfile';
+import UserList from './pages/userlist/UserList';
+import Beacon from './pages/beacon/Beacon';
+import BeaconRegister from './pages/beacon/BeaconRegister';
+import BeaconEdit from './pages/beacon/BeaconEdit';
 
 const PrivateRoute = ({ children, roles }) => {
     const { user } = useAuth();
@@ -75,7 +79,7 @@ const App = () => {
                     <Route
                         path="/profile/me"
                         element={
-                            <PrivateRoute roles={['USER']}>
+                            <PrivateRoute>
                                 <MyProfile />
                             </PrivateRoute>
                         }
@@ -93,6 +97,38 @@ const App = () => {
                         element={
                             <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
                                 <CreateUser />
+                            </PrivateRoute>
+                        }
+                    />
+                     <Route
+                        path="/userlist"
+                        element={
+                            <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
+                                <UserList />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/beacon"
+                        element={
+                            <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
+                                <Beacon />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/registerBeacon"
+                        element={
+                            <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
+                                <BeaconRegister />
+                            </PrivateRoute>
+                        }
+                    />
+                     <Route
+                        path="/editbeacon"
+                        element={
+                            <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
+                                <BeaconEdit />
                             </PrivateRoute>
                         }
                     />

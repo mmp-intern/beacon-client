@@ -54,17 +54,17 @@ export const UserProfileTableContainer = styled.div`
 `;
 
 export const UserProfileTable = styled.table`
-    width: 50%;
+    width: 100%;
     border-collapse: collapse;
     th,
     td {
         border: 1px solid #ddd;
-        padding: 8px;
+          padding: 12px 9px; /* 세로 패딩을 늘리고 가로 패딩을 줄임 */
         text-align: left;
     }
     th {
         background-color: #f2f2f2;
-        width: 30%;
+        width: 20%;
     }
     tbody tr:nth-child(even) {
         background-color: #f9f9f9;
