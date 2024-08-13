@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import CommuteTable from '../../components/table/CommuteTable';
 import SearchBarWithDate from '../../components/searchbar/SearchBarWithDate';
@@ -14,7 +15,8 @@ import {
 import apiClient from '../../apiClient';
 
 const DailyStatus = () => {
-    // 컴포넌트 이름을 일일현황에 맞게 변경
+    const navigate = useNavigate();
+
     const getCurrentDate = () => {
         const now = new Date();
         return now.toISOString().split('T')[0];
@@ -34,9 +36,9 @@ const DailyStatus = () => {
 
         try {
             const response = await apiClient.get(
-                `/commutes/daily?date=${date}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `/commutes/daliy?date=${date}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
-            setData(response.data); // fetch 후에 data 설정
+            setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -69,6 +71,10 @@ const DailyStatus = () => {
         setCurrentPage(0);
     };
 
+    const handleRecordClick = (recordId) => {
+        navigate(`/commute/${recordId}`);
+    };
+
     const leftContent = (
         <div>
             <SubTitle>통근 관리</SubTitle>
@@ -90,7 +96,7 @@ const DailyStatus = () => {
 
     const mainContent = (
         <div>
-            <Title>일일현황</Title> {/* 페이지 제목 수정 */}
+            <Title>일일현황</Title>
             <SearchBarWithDate
                 searchBy={searchBy}
                 setSearchBy={setSearchBy}
@@ -117,6 +123,7 @@ const DailyStatus = () => {
                 currentPage={currentPage}
                 handlePageChange={handlePageChange}
                 pageSize={pageSize}
+                onRecordClick={handleRecordClick}
             />
         </div>
     );
@@ -124,4 +131,4 @@ const DailyStatus = () => {
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
-export default DailyStatus; // 컴포넌트 이름을 일일현황에 맞게 변경
+export default DailyStatus;
