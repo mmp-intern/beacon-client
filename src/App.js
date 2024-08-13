@@ -9,6 +9,7 @@ import CreateAdmin from './pages/createadmin/CreateAdmin';
 import CreateUser from './pages/createuser/CreateUser';
 import UserProfile from './pages/profile/UserProfile';
 import MyProfile from './pages/profile/MyProfile';
+import CommuteDetail from './pages/commute/CommuteDetail';
 
 const PrivateRoute = ({ children, roles }) => {
     const { user } = useAuth();
@@ -35,6 +36,14 @@ const App = () => {
                         element={
                             <PrivateRoute>
                                 <DailyStatus />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/commute/:recordId"
+                        element={
+                            <PrivateRoute>
+                                <CommuteDetail />
                             </PrivateRoute>
                         }
                     />

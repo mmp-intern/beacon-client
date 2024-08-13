@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, SortArrows, SortArrowUp, SortArrowDown } from './TableStyles';
 import Pagination from '../pagination/Pagination';
 
-const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageChange, pageSize }) => {
+const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageChange, pageSize, onRecordClick }) => {
     const currentData = data.content;
 
     const columns = [
@@ -14,6 +14,32 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
         { key: 'attendanceStatus', label: '상태' },
         { key: 'workStatus', label: '업무 상태' },
     ];
+
+    // 출근 상태 매핑 함수
+    const mapAttendanceStatus = (status) => {
+        switch (status) {
+            case 'PRESENT':
+                return '출근';
+            case 'LATE':
+                return '지각';
+            case 'ABSENT':
+                return '결근';
+            default:
+                return '-';
+        }
+    };
+
+    // 업무 상태 매핑 함수
+    const mapWorkStatus = (status) => {
+        switch (status) {
+            case 'IN_OFFICE':
+                return '업무 중';
+            case 'OUT_OFF_OFFICE':
+                return '업무 외';
+            default:
+                return '-';
+        }
+    };
 
     return (
         <div>
@@ -37,14 +63,14 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
                 </thead>
                 <tbody>
                     {currentData.map((item, index) => (
-                        <tr key={item.user.id}>
+                        <tr key={item.commute.id} onClick={() => onRecordClick(item.commute.id)}>
                             <td>{index + 1 + currentPage * pageSize}</td>
                             <td>{item.user.userId}</td>
                             <td>{item.user.name}</td>
-                            <td>{item.commute ? item.commute.startTime : '-'}</td>
-                            <td>{item.commute ? item.commute.endTime : '-'}</td>
-                            <td>{item.commute ? item.commute.attendanceStatus : '-'}</td>
-                            <td>{item.commute ? item.commute.workStatus : '-'}</td>
+                            <td>{item.commute.startTime || '-'}</td>
+                            <td>{item.commute.endTime || '-'}</td>
+                            <td>{mapAttendanceStatus(item.commute.attendanceStatus)}</td>
+                            <td>{mapWorkStatus(item.commute.workStatus)}</td>
                         </tr>
                     ))}
                 </tbody>

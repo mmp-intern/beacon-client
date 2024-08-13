@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import CommuteStatsTable from '../../components/table/CommuteStatsTable';
-import SearchBarWithPeriod from '../../components/searchbar/SearchBarWithPeriod';
+import SearchBarForWeek from '../../components/searchbar/SearchBarForWeek';
+import SearchBarForMonth from '../../components/searchbar/SearchBarForMonth';
+import SearchBarForYear from '../../components/searchbar/SearchBarForYear';
 import {
     Title,
     SubTitle,
@@ -14,68 +16,90 @@ import {
 import apiClient from '../../apiClient';
 
 const CommuteStatistics = ({ period }) => {
-    const getDateRange = () => {
-        const now = new Date();
-        let firstDay, lastDay;
-
-        switch (period) {
-            case 'week':
-                firstDay = new Date(now.setDate(now.getDate() - now.getDay()));
-                lastDay = new Date(now.setDate(now.getDate() - now.getDay() + 6));
-                break;
-            case 'month':
-                firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-                lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                break;
-            case 'year':
-                firstDay = new Date(now.getFullYear(), 0, 1);
-                lastDay = new Date(now.getFullYear(), 11, 31);
-                break;
-            default:
-                firstDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                lastDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                break;
-        }
-
-        return {
-            firstDay: firstDay.toISOString().split('T')[0],
-            lastDay: lastDay.toISOString().split('T')[0],
-        };
-    };
-
-    const { firstDay, lastDay } = getDateRange();
-
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
     const [searchTerm, setSearchTerm] = useState('');
     const [searchBy, setSearchBy] = useState('id');
-    const [startDate, setStartDate] = useState(firstDay);
-    const [endDate, setEndDate] = useState(lastDay);
     const [pageSize, setPageSize] = useState(10);
     const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
 
+    const columnMapping = {
+        'userInfo.id': 'id',
+        'userInfo.userId': 'userId',
+        'userInfo.name': 'name',
+        'statistics.presentDays': 'presentDays',
+        'statistics.lateDays': 'lateDays',
+        'statistics.absentDays': 'absentDays',
+        'statistics.totalDays': 'totalDays',
+    };
+
+    const getCurrentYearDates = () => {
+        const now = new Date();
+        const firstDay = new Date(Date.UTC(now.getUTCFullYear(), 0, 1)).toISOString().split('T')[0];
+        const lastDay = new Date(Date.UTC(now.getUTCFullYear(), 11, 31)).toISOString().split('T')[0];
+        return { firstDay, lastDay };
+    };
+
+    const getCurrentMonthDates = () => {
+        const now = new Date();
+        const firstDay = new Date(now.getUTCFullYear(), now.getUTCMonth(), 1).toISOString().split('T')[0];
+        const lastDay = new Date(now.getUTCFullYear(), now.getUTCMonth() + 1, 0).toISOString().split('T')[0];
+        return { firstDay, lastDay };
+    };
+
+    const calculateStartAndEndDate = (currentPeriod) => {
+        const now = new Date();
+        if (currentPeriod === 'week') {
+            const currentDay = now.getUTCDay();
+            const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
+            const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + mondayOffset));
+            const sunday = new Date(monday);
+            sunday.setUTCDate(monday.getUTCDate() + 6);
+
+            return {
+                startDate: monday.toISOString().split('T')[0],
+                endDate: sunday.toISOString().split('T')[0],
+            };
+        } else if (currentPeriod === 'month') {
+            return getCurrentMonthDates();
+        } else if (currentPeriod === 'year') {
+            return getCurrentYearDates();
+        }
+    };
+
+    const [startDateState, setStartDate] = useState('');
+    const [endDateState, setEndDate] = useState('');
+    const [isSearchTriggered, setIsSearchTriggered] = useState(false);
+
+    useEffect(() => {
+        const { startDate, endDate } = calculateStartAndEndDate(period);
+        setStartDate(startDate);
+        setEndDate(endDate);
+    }, [period]);
+
+    useEffect(() => {
+        if (isSearchTriggered) {
+            fetchData();
+        }
+    }, [isSearchTriggered, currentPage, pageSize, sortConfig]);
+
     const fetchData = async () => {
         const { column, direction } = sortConfig;
-        const sortParam = column && direction ? `&sort=${column},${direction}` : '';
+        const sortParam = column && direction ? `&sort=${columnMapping[column] || column},${direction}` : '';
 
         try {
             const response = await apiClient.get(
-                `/commutes/records?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `/commutes/statistics?startDate=${startDateState}&endDate=${endDateState}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
-
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
-    useEffect(() => {
-        fetchData();
-    }, [currentPage, pageSize, sortConfig]);
-
     const handleSearch = () => {
         setCurrentPage(0);
-        fetchData();
+        setIsSearchTriggered(true);
     };
 
     const handlePageChange = (newPage) => {
@@ -115,22 +139,65 @@ const CommuteStatistics = ({ period }) => {
         </div>
     );
 
+    const renderSearchBar = () => {
+        if (period === 'week') {
+            return (
+                <SearchBarForWeek
+                    searchBy={searchBy}
+                    setSearchBy={setSearchBy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    startDate={startDateState}
+                    setStartDate={setStartDate}
+                    endDate={endDateState}
+                    setEndDate={setEndDate}
+                    handleSearch={handleSearch}
+                />
+            );
+        } else if (period === 'month') {
+            const selectedMonth = startDateState ? startDateState.slice(0, 7) : '';
+            return (
+                <SearchBarForMonth
+                    searchBy={searchBy}
+                    setSearchBy={setSearchBy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    selectedMonth={selectedMonth}
+                    setSelectedMonth={(month) => {
+                        const [year, monthNum] = month.split('-');
+                        const firstDay = new Date(Date.UTC(year, monthNum - 1, 1)).toISOString().split('T')[0];
+                        const lastDay = new Date(Date.UTC(year, monthNum, 0)).toISOString().split('T')[0];
+                        setStartDate(firstDay);
+                        setEndDate(lastDay);
+                    }}
+                    handleSearch={handleSearch}
+                />
+            );
+        } else if (period === 'year') {
+            const selectedYear = startDateState ? startDateState.slice(0, 4) : '';
+            return (
+                <SearchBarForYear
+                    searchBy={searchBy}
+                    setSearchBy={setSearchBy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    selectedYear={selectedYear}
+                    setSelectedYear={(year) => {
+                        const firstDay = new Date(Date.UTC(year, 0, 1)).toISOString().split('T')[0];
+                        const lastDay = new Date(Date.UTC(year, 11, 31)).toISOString().split('T')[0];
+                        setStartDate(firstDay);
+                        setEndDate(lastDay);
+                    }}
+                    handleSearch={handleSearch}
+                />
+            );
+        }
+    };
+
     const mainContent = (
         <div>
-            <Title>{`${
-                period === 'day' ? '일일' : period === 'week' ? '주간' : period === 'month' ? '월간' : '연간'
-            }현황`}</Title>
-            <SearchBarWithPeriod
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                handleSearch={handleSearch}
-            />
+            <Title>{period === 'week' ? '주간 현황' : period === 'month' ? '월간 현황' : '연간 현황'}</Title>
+            {renderSearchBar()}
             <PageSizeContainer>
                 <PageSizeLabel>페이지당</PageSizeLabel>
                 <PageSizeSelect value={pageSize} onChange={handlePageSizeChange}>
