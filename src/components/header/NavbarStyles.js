@@ -71,14 +71,14 @@ export const Divider = styled.div`
 
 export const LogoutButton = styled.button`
     padding: 10px 20px;
-    border: none;
-    border-radius: 3px;
-    background-color: #1f4c89;
-    color: white;
+    border: none; /* 경계를 없앰 */
+    border-radius: 4px;
+    background-color: transparent; /* 배경색을 투명하게 설정 */
+    color: white; /* 텍스트 색상 */
     cursor: pointer;
     margin-left: 10px;
     
     &:hover {
-        background-color: #1f4c89;
+        background-color: rgba(255, 255, 255, 0.1); /* 호버 시 약간의 투명도 있는 배경 */
     }
 `;
