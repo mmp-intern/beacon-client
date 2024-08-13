@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import UserListTable from '../../components/table/UserListTable'; // 새로운 유저 리스트 테이블 컴포넌트
 import SearchBar from '../../components/searchbar/SearchBar'; // 새로운 검색 바 컴포넌트
+import { useAuth } from '../../AuthContext';
 import {
     Title,
     SubTitle,
@@ -14,6 +15,7 @@ import {
 import apiClient from '../../apiClient';
 
 const UserListPage = () => {
+    const { user } = useAuth();
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
     const [searchTerm, setSearchTerm] = useState('');
@@ -87,10 +89,12 @@ const UserListPage = () => {
             <StyledNavLink to="/users" activeClassName="active">
                 사용자 계정 생성
             </StyledNavLink>
-            <StyledNavLink to="/admin" activeClassName="active">
-                관리자 계정 생성
-            </StyledNavLink>
-            {/* 추가적인 메뉴들 */}
+            
+            {user && user.role === 'SUPER_ADMIN' && ( // 슈퍼관리자인 경우에만 링크 표시
+                <StyledNavLink to="/admin" activeClassName="active">
+                    관리자 계정 생성
+                </StyledNavLink>
+            )}
         </div>
     );
 

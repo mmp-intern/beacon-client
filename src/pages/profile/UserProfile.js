@@ -17,14 +17,14 @@ const UserProfile = () => {
         phoneNumber: '',
         email: '',
         position: '',
-        role: '', // 사용자 역할 추가
+        role: '',
     });
 
     const fetchUserData = async () => {
         try {
             const response = await apiClient.get(`/profile/${userId}`);
-            console.log('API Response:', response); // 응답 로그 확인
-            setUser(response.data); // 응답 데이터를 상태로 설정
+            console.log('API Response:', response); 
+            setUser(response.data); 
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -47,9 +47,11 @@ const UserProfile = () => {
             <StyledNavLink to="/users" activeClassName="active">
                 사용자 계정 생성
             </StyledNavLink>
+                {user && user.role === 'SUPER_ADMIN' && (
             <StyledNavLink to="/admin" activeClassName="active">
-                관리자 계정 생성
+                 관리자 계정 생성
             </StyledNavLink>
+            )} 
         </div>
     );
 
