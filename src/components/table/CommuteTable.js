@@ -9,8 +9,8 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
         { key: 'id', label: '번호' },
         { key: 'userId', label: '아이디' },
         { key: 'name', label: '사원명' },
-        { key: 'startTime', label: '출근 시간' },
-        { key: 'endTime', label: '퇴근 시간' },
+        { key: 'startedAt', label: '출근 시간' },
+        { key: 'endedAt', label: '퇴근 시간' },
         { key: 'attendanceStatus', label: '상태' },
         { key: 'workStatus', label: '업무 상태' },
     ];
@@ -71,8 +71,8 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
                                 <td>{index + 1 + currentPage * pageSize}</td>
                                 <td>{item.user.userId}</td>
                                 <td>{item.user.name}</td>
-                                <td>{commute?.startTime || '-'}</td>
-                                <td>{commute?.endTime || '-'}</td>
+                                <td>{commute?.startedAt || '-'}</td>
+                                <td>{commute?.endedAt || '-'}</td>
                                 <td>{mapAttendanceStatus(commute?.attendanceStatus)}</td>
                                 <td>{mapWorkStatus(commute?.workStatus)}</td>
                             </tr>

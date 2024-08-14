@@ -10,8 +10,8 @@ const CommuteRecordsTable = ({ data, sortConfig, handleSort, currentPage, handle
         { key: 'userId', label: '아이디' },
         { key: 'name', label: '사원명' },
         { key: 'date', label: '날짜' },
-        { key: 'startTime', label: '출근 시간' },
-        { key: 'endTime', label: '퇴근 시간' },
+        { key: 'startedAt', label: '출근 시간' },
+        { key: 'endedAt', label: '퇴근 시간' },
         { key: 'attendanceStatus', label: '상태' },
         { key: 'workStatus', label: '업무 상태' },
     ];
@@ -44,8 +44,8 @@ const CommuteRecordsTable = ({ data, sortConfig, handleSort, currentPage, handle
                             <td>{item.user.userId}</td>
                             <td>{item.user.name}</td>
                             <td>{item.commute.date}</td>
-                            <td>{item.commute.startTime}</td>
-                            <td>{item.commute.endTime}</td>
+                            <td>{item.commute.startedAt}</td>
+                            <td>{item.commute.endedAt}</td>
                             <td>{item.commute.attendanceStatus}</td>
                             <td>{item.commute.workStatus}</td>
                         </tr>
