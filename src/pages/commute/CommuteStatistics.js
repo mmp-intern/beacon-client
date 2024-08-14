@@ -69,27 +69,21 @@ const CommuteStatistics = ({ period }) => {
 
     const [startDateState, setStartDate] = useState('');
     const [endDateState, setEndDate] = useState('');
-    const [isSearchTriggered, setIsSearchTriggered] = useState(false);
 
     useEffect(() => {
         const { startDate, endDate } = calculateStartAndEndDate(period);
         setStartDate(startDate);
         setEndDate(endDate);
+        fetchData(startDate, endDate);
     }, [period]);
 
-    useEffect(() => {
-        if (isSearchTriggered) {
-            fetchData();
-        }
-    }, [isSearchTriggered, currentPage, pageSize, sortConfig]);
-
-    const fetchData = async () => {
+    const fetchData = async (startDate = startDateState, endDate = endDateState) => {
         const { column, direction } = sortConfig;
         const sortParam = column && direction ? `&sort=${columnMapping[column] || column},${direction}` : '';
 
         try {
             const response = await apiClient.get(
-                `/commutes/statistics?startDate=${startDateState}&endDate=${endDateState}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `/commutes/statistics?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
             setData(response.data);
         } catch (error) {
@@ -99,16 +93,18 @@ const CommuteStatistics = ({ period }) => {
 
     const handleSearch = () => {
         setCurrentPage(0);
-        setIsSearchTriggered(true);
+        fetchData(); // 검색 버튼을 눌렀을 때 데이터를 가져옴
     };
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
+        fetchData(); // 페이지가 변경될 때 데이터를 다시 가져옴
     };
 
     const handlePageSizeChange = (e) => {
         setPageSize(Number(e.target.value));
         setCurrentPage(0);
+        fetchData(); // 페이지 크기가 변경될 때 데이터를 다시 가져옴
     };
 
     const handleSort = (column) => {
@@ -118,6 +114,7 @@ const CommuteStatistics = ({ period }) => {
         }
         setSortConfig({ column, direction });
         setCurrentPage(0);
+        fetchData(); // 정렬이 변경될 때 데이터를 다시 가져옴
     };
 
     const leftContent = (
@@ -222,4 +219,5 @@ const CommuteStatistics = ({ period }) => {
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
+// Export가 코드 블록 내에 있으면 안 되므로 최상위 레벨에 위치시킵니다.
 export default CommuteStatistics;
