@@ -72,7 +72,9 @@ const DailyStatus = () => {
     };
 
     const handleRecordClick = (recordId) => {
-        navigate(`/commute/${recordId}`);
+        if (recordId) {
+            navigate(`/commute/${recordId}`);
+        }
     };
 
     const leftContent = (

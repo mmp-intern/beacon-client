@@ -9,13 +9,12 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
         { key: 'id', label: '번호' },
         { key: 'userId', label: '아이디' },
         { key: 'name', label: '사원명' },
-        { key: 'startTime', label: '출근 시간' },
-        { key: 'endTime', label: '퇴근 시간' },
+        { key: 'startedAt', label: '출근 시간' },
+        { key: 'endedAt', label: '퇴근 시간' },
         { key: 'attendanceStatus', label: '상태' },
         { key: 'workStatus', label: '업무 상태' },
     ];
 
-    // 출근 상태 매핑 함수
     const mapAttendanceStatus = (status) => {
         switch (status) {
             case 'PRESENT':
@@ -29,7 +28,6 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
         }
     };
 
-    // 업무 상태 매핑 함수
     const mapWorkStatus = (status) => {
         switch (status) {
             case 'IN_OFFICE':
@@ -62,17 +60,24 @@ const CommuteTable = ({ data, sortConfig, handleSort, currentPage, handlePageCha
                     </tr>
                 </thead>
                 <tbody>
-                    {currentData.map((item, index) => (
-                        <tr key={item.commute.id} onClick={() => onRecordClick(item.commute.id)}>
-                            <td>{index + 1 + currentPage * pageSize}</td>
-                            <td>{item.user.userId}</td>
-                            <td>{item.user.name}</td>
-                            <td>{item.commute.startTime || '-'}</td>
-                            <td>{item.commute.endTime || '-'}</td>
-                            <td>{mapAttendanceStatus(item.commute.attendanceStatus)}</td>
-                            <td>{mapWorkStatus(item.commute.workStatus)}</td>
-                        </tr>
-                    ))}
+                    {currentData.map((item, index) => {
+                        const commute = item.commute;
+                        return (
+                            <tr
+                                key={item.user.id}
+                                onClick={() => commute && onRecordClick(commute.id)}
+                                style={{ cursor: commute ? 'pointer' : 'default' }}
+                            >
+                                <td>{index + 1 + currentPage * pageSize}</td>
+                                <td>{item.user.userId}</td>
+                                <td>{item.user.name}</td>
+                                <td>{commute?.startedAt || '-'}</td>
+                                <td>{commute?.endedAt || '-'}</td>
+                                <td>{mapAttendanceStatus(commute?.attendanceStatus)}</td>
+                                <td>{mapWorkStatus(commute?.workStatus)}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </Table>
             <Pagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePageChange} />

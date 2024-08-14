@@ -51,17 +51,17 @@ const CommuteDetail = () => {
             <div>
                 <label>출근 시간:</label>
                 {isEditing ? (
-                    <input type="time" value={record.startTime} onChange={(e) => handleInputChange(e, 'startTime')} />
+                    <input type="time" value={record.startedAt} onChange={(e) => handleInputChange(e, 'startedAt')} />
                 ) : (
-                    <span>{record.startTime}</span>
+                    <span>{record.startedAt}</span>
                 )}
             </div>
             <div>
                 <label>퇴근 시간:</label>
                 {isEditing ? (
-                    <input type="time" value={record.endTime} onChange={(e) => handleInputChange(e, 'endTime')} />
+                    <input type="time" value={record.endedAt} onChange={(e) => handleInputChange(e, 'endedAt')} />
                 ) : (
-                    <span>{record.endTime}</span>
+                    <span>{record.endedAt}</span>
                 )}
             </div>
             <div>
