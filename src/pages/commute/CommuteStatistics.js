@@ -22,6 +22,9 @@ const CommuteStatistics = ({ period }) => {
     const [searchBy, setSearchBy] = useState('id');
     const [pageSize, setPageSize] = useState(10);
     const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
+    const [startDateState, setStartDate] = useState('');
+    const [endDateState, setEndDate] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState('');
 
     const columnMapping = {
         'userInfo.id': 'id',
@@ -33,6 +36,13 @@ const CommuteStatistics = ({ period }) => {
         'statistics.totalDays': 'totalDays',
     };
 
+    const getCurrentMonthDates = () => {
+        const now = new Date();
+        const firstDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString().split('T')[0];
+        const lastDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0)).toISOString().split('T')[0];
+        return { firstDay, lastDay };
+    };
+
     const getCurrentYearDates = () => {
         const now = new Date();
         const firstDay = new Date(Date.UTC(now.getUTCFullYear(), 0, 1)).toISOString().split('T')[0];
@@ -40,16 +50,9 @@ const CommuteStatistics = ({ period }) => {
         return { firstDay, lastDay };
     };
 
-    const getCurrentMonthDates = () => {
-        const now = new Date();
-        const firstDay = new Date(now.getUTCFullYear(), now.getUTCMonth(), 1).toISOString().split('T')[0];
-        const lastDay = new Date(now.getUTCFullYear(), now.getUTCMonth() + 1, 0).toISOString().split('T')[0];
-        return { firstDay, lastDay };
-    };
-
     const calculateStartAndEndDate = (currentPeriod) => {
-        const now = new Date();
         if (currentPeriod === 'week') {
+            const now = new Date();
             const currentDay = now.getUTCDay();
             const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
             const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + mondayOffset));
@@ -67,23 +70,29 @@ const CommuteStatistics = ({ period }) => {
         }
     };
 
-    const [startDateState, setStartDate] = useState('');
-    const [endDateState, setEndDate] = useState('');
-
     useEffect(() => {
         const { startDate, endDate } = calculateStartAndEndDate(period);
         setStartDate(startDate);
         setEndDate(endDate);
-        fetchData(startDate, endDate);
+
+        if (period === 'month') {
+            setSelectedMonth(startDate.slice(0, 7)); // 현재 달을 검색바에 설정 // <- 변경된 부분
+        }
     }, [period]);
 
-    const fetchData = async (startDate = startDateState, endDate = endDateState) => {
+    useEffect(() => {
+        if (startDateState && endDateState) {
+            fetchData(); // 시작일과 종료일이 설정되면 데이터를 가져옴 // <- 변경된 부분
+        }
+    }, [startDateState, endDateState]);
+
+    const fetchData = async () => {
         const { column, direction } = sortConfig;
         const sortParam = column && direction ? `&sort=${columnMapping[column] || column},${direction}` : '';
 
         try {
             const response = await apiClient.get(
-                `/commutes/statistics?startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `/commutes/statistics?startDate=${startDateState}&endDate=${endDateState}&searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
             );
             setData(response.data);
         } catch (error) {
@@ -93,18 +102,18 @@ const CommuteStatistics = ({ period }) => {
 
     const handleSearch = () => {
         setCurrentPage(0);
-        fetchData(); // 검색 버튼을 눌렀을 때 데이터를 가져옴
+        fetchData(); // 검색 버튼 클릭 시 데이터 조회 // <- 변경된 부분
     };
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
-        fetchData(); // 페이지가 변경될 때 데이터를 다시 가져옴
+        fetchData();
     };
 
     const handlePageSizeChange = (e) => {
         setPageSize(Number(e.target.value));
         setCurrentPage(0);
-        fetchData(); // 페이지 크기가 변경될 때 데이터를 다시 가져옴
+        fetchData();
     };
 
     const handleSort = (column) => {
@@ -114,7 +123,7 @@ const CommuteStatistics = ({ period }) => {
         }
         setSortConfig({ column, direction });
         setCurrentPage(0);
-        fetchData(); // 정렬이 변경될 때 데이터를 다시 가져옴
+        fetchData();
     };
 
     const leftContent = (
@@ -152,7 +161,6 @@ const CommuteStatistics = ({ period }) => {
                 />
             );
         } else if (period === 'month') {
-            const selectedMonth = startDateState ? startDateState.slice(0, 7) : '';
             return (
                 <SearchBarForMonth
                     searchBy={searchBy}
@@ -167,7 +175,7 @@ const CommuteStatistics = ({ period }) => {
                         setStartDate(firstDay);
                         setEndDate(lastDay);
                     }}
-                    handleSearch={handleSearch}
+                    handleSearch={handleSearch} // 검색 버튼 클릭 시만 조회되도록 설정 // <- 변경된 부분
                 />
             );
         } else if (period === 'year') {
@@ -219,5 +227,4 @@ const CommuteStatistics = ({ period }) => {
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
-// Export가 코드 블록 내에 있으면 안 되므로 최상위 레벨에 위치시킵니다.
 export default CommuteStatistics;

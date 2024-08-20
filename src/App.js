@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { useAuth } from './AuthContext';
 import AuthProvider from './AuthContext';
 import DailyStatus from './pages/commute/DailyStatus';
-import CommuteStatistics from './pages/commute/CommuteStatistics';
+import CommuteWeeklyStats from './pages/commute/CommuteWeeklyStats';
+import CommuteMonthlyStats from './pages/commute/CommuteMonthlyStats';
+import CommuteYearlyStats from './pages/commute/CommuteYearlyStats';
 import LoginPage from './pages/loginform/LoginPage';
 import CreateAdmin from './pages/createadmin/CreateAdmin';
 import CreateUser from './pages/createuser/CreateUser';
@@ -55,7 +57,7 @@ const App = () => {
                         path="/commute-week"
                         element={
                             <PrivateRoute>
-                                <CommuteStatistics period="week" />
+                                <CommuteWeeklyStats />
                             </PrivateRoute>
                         }
                     />
@@ -63,7 +65,7 @@ const App = () => {
                         path="/commute-month"
                         element={
                             <PrivateRoute>
-                                <CommuteStatistics period="month" />
+                                <CommuteMonthlyStats />
                             </PrivateRoute>
                         }
                     />
@@ -71,7 +73,7 @@ const App = () => {
                         path="/commute-year"
                         element={
                             <PrivateRoute>
-                                <CommuteStatistics period="year" />
+                                <CommuteYearlyStats />
                             </PrivateRoute>
                         }
                     />
@@ -107,7 +109,7 @@ const App = () => {
                             </PrivateRoute>
                         }
                     />
-                     <Route
+                    <Route
                         path="/userlist"
                         element={
                             <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
@@ -131,7 +133,7 @@ const App = () => {
                             </PrivateRoute>
                         }
                     />
-                     <Route
+                    <Route
                         path="/editbeacon"
                         element={
                             <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
