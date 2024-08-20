@@ -10,6 +10,14 @@ const SearchBarForYear = ({
     setSelectedYear,
     handleSearch,
 }) => {
+    const currentYear = new Date().getFullYear();
+    const years = Array.from(new Array(currentYear - 1999), (v, i) => currentYear - i);
+
+    const handleYearChange = (e) => {
+        const newYear = e.target.value;
+        setSelectedYear(newYear);
+    };
+
     return (
         <SearchContainer>
             <SearchTable>
@@ -35,13 +43,13 @@ const SearchBarForYear = ({
                     <tr>
                         <th>연도</th>
                         <td>
-                            <SearchInput
-                                type="number"
-                                value={selectedYear}
-                                onChange={(e) => setSelectedYear(e.target.value)}
-                                min={2000}
-                                max={new Date().getFullYear()}
-                            />
+                            <Select value={selectedYear} onChange={handleYearChange}>
+                                {years.map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </Select>
                         </td>
                     </tr>
                 </tbody>
