@@ -46,7 +46,7 @@ const App = () => {
                         }
                     />
                     <Route
-                        path="/commute/:recordId"
+                        path="/commute/:commuteId"
                         element={
                             <PrivateRoute>
                                 <CommuteDetail />

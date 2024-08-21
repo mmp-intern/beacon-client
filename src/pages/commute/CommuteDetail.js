@@ -1,88 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
+import CommuteDetailTable from '../../components/table/CommuteDetailTable';
+import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
 
-const CommuteDetail = () => {
-    const { recordId } = useParams();
-    const [record, setRecord] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
+const CommuteDetailPage = () => {
+    const { commuteId } = useParams();
+    const [detail, setDetail] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
 
-    const fetchRecord = async () => {
+    const fetchCommuteDetail = async () => {
         try {
-            const response = await apiClient.get(`/commutes/${recordId}`);
-            setRecord(response.data);
+            setIsLoading(true);
+            const response = await apiClient.get(`/commutes/${commuteId}`);
+            setDetail(response.data);
         } catch (error) {
-            console.error('Error fetching commute record', error);
+            setIsError(true);
+            console.error('Error fetching commute detail:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchRecord();
-    }, [recordId]);
+        fetchCommuteDetail();
+    }, [commuteId]);
 
-    const handleInputChange = (e, field) => {
-        const { value } = e.target;
-        setRecord({ ...record, [field]: value });
-    };
-
-    const handleSave = async () => {
-        try {
-            await apiClient.put(`/commutes/${recordId}`, record);
-            alert('수정이 완료되었습니다.');
-            setIsEditing(false);
-        } catch (error) {
-            console.error('Error saving commute record', error);
-            alert('수정에 실패했습니다.');
-        }
-    };
-
-    if (!record) return <div>Loading...</div>;
-
-    return (
-        <Layout>
-            <h2>근태 기록 상세 정보</h2>
-            <div>
-                <label>ID: {record.userId}</label>
-            </div>
-            <div>
-                <label>이름: {record.name}</label>
-            </div>
-            <div>
-                <label>출근 시간:</label>
-                {isEditing ? (
-                    <input type="time" value={record.startedAt} onChange={(e) => handleInputChange(e, 'startedAt')} />
-                ) : (
-                    <span>{record.startedAt}</span>
-                )}
-            </div>
-            <div>
-                <label>퇴근 시간:</label>
-                {isEditing ? (
-                    <input type="time" value={record.endedAt} onChange={(e) => handleInputChange(e, 'endedAt')} />
-                ) : (
-                    <span>{record.endedAt}</span>
-                )}
-            </div>
-            <div>
-                <label>상태:</label>
-                {isEditing ? (
-                    <select value={record.status} onChange={(e) => handleInputChange(e, 'status')}>
-                        <option value="PRESENT">출근</option>
-                        <option value="ABSENT">결근</option>
-                        <option value="LEAVE">휴가</option>
-                    </select>
-                ) : (
-                    <span>{record.status}</span>
-                )}
-            </div>
-            {isEditing ? (
-                <button onClick={handleSave}>저장</button>
-            ) : (
-                <button onClick={() => setIsEditing(true)}>수정</button>
-            )}
-        </Layout>
+    const leftContent = (
+        <div>
+            <SubTitle>통근 관리</SubTitle>
+            <Divider />
+            <StyledNavLink to="/" activeClassName="active">
+                일일현황
+            </StyledNavLink>
+            <StyledNavLink to="/commute-week" activeClassName="active">
+                주간현황
+            </StyledNavLink>
+            <StyledNavLink to="/commute-month" activeClassName="active">
+                월간현황
+            </StyledNavLink>
+            <StyledNavLink to="/commute-year" activeClassName="active">
+                연간현황
+            </StyledNavLink>
+        </div>
     );
+
+    const mainContent = (
+        <div>
+            <Title>근태 상세 정보</Title>
+            <CommuteDetailTable detail={detail} isLoading={isLoading} isError={isError} />
+        </div>
+    );
+
+    return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
-export default CommuteDetail;
+export default CommuteDetailPage;

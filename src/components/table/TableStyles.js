@@ -45,7 +45,7 @@ export const SortArrowDown = styled.div`
     margin-top: 2px;
 `;
 
-export const UserProfileTableContainer = styled.div`
+export const TableContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,13 +53,13 @@ export const UserProfileTableContainer = styled.div`
     margin: 20px 0;
 `;
 
-export const UserProfileTable = styled.table`
+export const VerticalTable = styled.table`
     width: 100%;
     border-collapse: collapse;
     th,
     td {
         border: 1px solid #ddd;
-          padding: 12px 9px; /* 세로 패딩을 늘리고 가로 패딩을 줄임 */
+        padding: 12px 9px; /* 세로 패딩을 늘리고 가로 패딩을 줄임 */
         text-align: left;
     }
     th {
