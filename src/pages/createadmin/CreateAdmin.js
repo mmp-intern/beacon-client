@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
-import { Label, Input, Button, ButtonContainer, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
+import { Label, Input, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
+import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 
 const CreateAdmin = () => {
     const [adminData, setAdminData] = useState({
@@ -28,10 +29,10 @@ const CreateAdmin = () => {
             if (response.status !== 200) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-    
+
             const result = response.data;
             console.log(result);
-    
+
             // 성공 시 처리
             alert('관리자 생성 완료');
             setAdminData({
@@ -66,16 +67,19 @@ const CreateAdmin = () => {
             <StyledNavLink to="/admin" activeClassName="active">
                 관리자 계정 생성
             </StyledNavLink>
-            
         </div>
     );
 
     const mainContent = (
         <>
             <Title>관리자 계정 생성</Title> {/* 타이틀은 기존 그대로 유지 */}
-            <FormWrapper> {/* 폼을 전체적으로 감싸는 컨테이너 */}
+            <FormWrapper>
+                {' '}
+                {/* 폼을 전체적으로 감싸는 컨테이너 */}
                 <form onSubmit={handleSubmit}>
-                    <FormRow> {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
+                    <FormRow>
+                        {' '}
+                        {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
                         <Label>사용자 ID</Label>
                         <Input
                             type="text"
@@ -109,14 +113,16 @@ const CreateAdmin = () => {
                             required
                         />
                     </FormRow>
-                    <ButtonContainer> {/* 계정 생성 버튼을 폼 내부에 포함 */}
+                    <ButtonContainer>
+                        {' '}
+                        {/* 계정 생성 버튼을 폼 내부에 포함 */}
                         <Button type="submit">계정 생성</Button>
                     </ButtonContainer>
                 </form>
             </FormWrapper>
         </>
     );
-    
+
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 

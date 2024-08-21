@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserProfileTableContainer, UserProfileTable } from './TableStyles';
+import { TableContainer, VerticalTable } from './TableStyles';
 
 const UserProfileTableComponent = ({ user }) => {
     const fields = [
@@ -12,8 +12,8 @@ const UserProfileTableComponent = ({ user }) => {
     ];
 
     return (
-        <UserProfileTableContainer>
-            <UserProfileTable>
+        <TableContainer>
+            <VerticalTable>
                 <tbody>
                     {fields.map((field) => (
                         <tr key={field.key}>
@@ -22,8 +22,8 @@ const UserProfileTableComponent = ({ user }) => {
                         </tr>
                     ))}
                 </tbody>
-            </UserProfileTable>
-        </UserProfileTableContainer>
+            </VerticalTable>
+        </TableContainer>
     );
 };
 

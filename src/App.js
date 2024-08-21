@@ -6,6 +6,8 @@ import DailyStatus from './pages/commute/DailyStatus';
 import CommuteWeeklyStats from './pages/commute/CommuteWeeklyStats';
 import CommuteMonthlyStats from './pages/commute/CommuteMonthlyStats';
 import CommuteYearlyStats from './pages/commute/CommuteYearlyStats';
+import CommuteEdit from './pages/commute/CommuteEdit';
+import CommuteDetail from './pages/commute/CommuteDetail';
 import LoginPage from './pages/loginform/LoginPage';
 import CreateAdmin from './pages/createadmin/CreateAdmin';
 import CreateUser from './pages/createuser/CreateUser';
@@ -15,7 +17,6 @@ import UserList from './pages/userlist/UserList';
 import Beacon from './pages/beacon/Beacon';
 import BeaconRegister from './pages/beacon/BeaconRegister';
 import BeaconEdit from './pages/beacon/BeaconEdit';
-import CommuteDetail from './pages/commute/CommuteDetail';
 
 const PrivateRoute = ({ children, roles }) => {
     const { user } = useAuth();
@@ -46,10 +47,18 @@ const App = () => {
                         }
                     />
                     <Route
-                        path="/commute/:recordId"
+                        path="/commute/:commuteId"
                         element={
                             <PrivateRoute>
                                 <CommuteDetail />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/commute/:commuteId/edit"
+                        element={
+                            <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
+                                <CommuteEdit />
                             </PrivateRoute>
                         }
                     />

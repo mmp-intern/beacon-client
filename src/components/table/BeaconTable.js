@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
-import styled from 'styled-components'; 
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { Table, SortArrows, SortArrowUp, SortArrowDown } from './TableStyles';
 import Pagination from '../pagination/Pagination';
 import RegisterButton from '../Beaconbutton/RegisterButton';
 import EditButton from '../Beaconbutton/EditButton';
 import BeaconDeleteButton from '../Beaconbutton/BeaconDeleteButton';
 
-const BeaconTable = ({ data, sortConfig, handleSort, currentPage, handlePageChange, pageSize, handleRegister, handleEdit, handleDelete }) => {
+const BeaconTable = ({
+    data,
+    sortConfig,
+    handleSort,
+    currentPage,
+    handlePageChange,
+    pageSize,
+    handleRegister,
+    handleEdit,
+    handleDelete,
+}) => {
     const navigate = useNavigate(); // useNavigate 훅 사용
 
     const currentData = data.content;
@@ -74,7 +84,7 @@ export default BeaconTable;
 
 const ButtonContainer = styled.div`
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
 
     margin-top: 20px;
 `;
