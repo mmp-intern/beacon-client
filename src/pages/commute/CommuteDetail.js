@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import CommuteDetailTable from '../../components/table/CommuteDetailTable';
-import { Title, SubTitle, Divider, StyledNavLink, Button, ButtonContainer } from '../../styles/common/Typography';
+import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
+import { Button, ButtonContainer } from '../../styles/common/ButtonStyles';
 import apiClient from '../../apiClient';
-import { useAuth } from '../../AuthContext';
 
 const CommuteDetail = () => {
     const { commuteId } = useParams();
     const [detail, setDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const { user } = useAuth();
+    const [profile, setProfile] = useState(null); // profile 상태 추가
     const navigate = useNavigate();
 
     const fetchCommuteDetail = async () => {
@@ -27,8 +27,18 @@ const CommuteDetail = () => {
         }
     };
 
+    const fetchProfile = async () => {
+        try {
+            const response = await apiClient.get('/profile/me');
+            setProfile(response.data);
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+        }
+    };
+
     useEffect(() => {
         fetchCommuteDetail();
+        fetchProfile(); // 프로필 정보도 함께 로드
     }, [commuteId]);
 
     useEffect(() => {
@@ -65,7 +75,7 @@ const CommuteDetail = () => {
         <div>
             <Title>근태 상세 정보</Title>
             <CommuteDetailTable detail={detail} />
-            {user && (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
+            {profile && (profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN') && (
                 <ButtonContainer>
                     <Button onClick={handleEdit}>수정</Button>
                 </ButtonContainer>

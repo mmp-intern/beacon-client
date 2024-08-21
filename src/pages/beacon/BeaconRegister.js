@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
-import { Label, Input, Button, FormRow, FormWrapper, ButtonContainer } from '../../components/register/AdminStyles';
+import { Label, Input, FormRow, FormWrapper } from '../../components/register/AdminStyles';
+import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 
 const RegisterBeacon = () => {
     const [formData, setFormData] = useState({
@@ -62,37 +63,29 @@ const RegisterBeacon = () => {
     const mainContent = (
         <>
             <Title>비콘 정보 등록</Title> {/* 타이틀은 기존 그대로 유지 */}
-            <FormWrapper> {/* 폼을 전체적으로 감싸는 컨테이너 */}
+            <FormWrapper>
+                {' '}
+                {/* 폼을 전체적으로 감싸는 컨테이너 */}
                 <form onSubmit={handleSubmit}>
-                    <FormRow> {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
+                    <FormRow>
+                        {' '}
+                        {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
                         <Label>사용자 ID</Label>
-                        <Input
-                            type="text"
-                            name="userId"
-                            value={formData.userId}
-                            onChange={handleChange}
-                            required
-                        />
+                        <Input type="text" name="userId" value={formData.userId} onChange={handleChange} required />
                     </FormRow>
                     <FormRow>
                         <Label>비콘 ID</Label>
-                        <Input
-                            type="text"
-                            name="beaconId"
-                            value={formData.beaconId}
-                            onChange={handleChange}
-                            required
-                        />
+                        <Input type="text" name="beaconId" value={formData.beaconId} onChange={handleChange} required />
                     </FormRow>
-                    <ButtonContainer> {/* 매칭 등록 버튼 */}
+                    <ButtonContainer>
+                        {' '}
+                        {/* 매칭 등록 버튼 */}
                         <Button type="submit">매칭 등록</Button>
                     </ButtonContainer>
                 </form>
             </FormWrapper>
         </>
     );
-    
-    
 
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };

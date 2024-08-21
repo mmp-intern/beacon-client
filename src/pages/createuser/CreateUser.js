@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
-import { Label, Input, Button, ButtonContainer, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
+import { Label, Input, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
+import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 import { useAuth } from '../../AuthContext';
 
 const CreateUser = () => {
@@ -20,7 +21,7 @@ const CreateUser = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === "phone") {
+        if (name === 'phone') {
             // 전화번호 입력 시 하이픈 자동 추가
             const formattedPhone = formatPhoneNumber(value);
             setUserData({
@@ -63,7 +64,7 @@ const CreateUser = () => {
                 password: '',
                 company: '',
             });
-        }  catch (error) {
+        } catch (error) {
             console.error('Error creating admin account:', error);
             if (error.response && error.response.status === 400 && error.response.data.includes('중복')) {
                 alert('중복된 아이디입니다. 다른 아이디를 사용하세요.');
@@ -78,28 +79,32 @@ const CreateUser = () => {
             <SubTitle>관리자 메뉴</SubTitle>
             <Divider />
             <StyledNavLink to="/userlist" activeClassName="active">
-            회원 목록 조회
-            </StyledNavLink>   
+                회원 목록 조회
+            </StyledNavLink>
             <StyledNavLink to="/profile/${userId}" activeClassName="active">
                 회원 프로필 조회
-            </StyledNavLink> 
+            </StyledNavLink>
             <StyledNavLink to="/users" activeClassName="active">
-            사용자 계정 생성
+                사용자 계정 생성
             </StyledNavLink>
             {user && user.role === 'SUPER_ADMIN' && (
-            <StyledNavLink to="/admin" activeClassName="active">
-             관리자 계정 생성
-            </StyledNavLink>
-            )} 
+                <StyledNavLink to="/admin" activeClassName="active">
+                    관리자 계정 생성
+                </StyledNavLink>
+            )}
         </div>
     );
 
     const mainContent = (
         <>
             <Title>사용자 계정 생성</Title> {/* 타이틀은 기존 그대로 유지 */}
-            <FormWrapper> {/* 폼을 전체적으로 감싸는 컨테이너 */}
+            <FormWrapper>
+                {' '}
+                {/* 폼을 전체적으로 감싸는 컨테이너 */}
                 <form onSubmit={handleSubmit}>
-                    <FormRow> {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
+                    <FormRow>
+                        {' '}
+                        {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
                         <Label>사용자 ID</Label>
                         <Input
                             type="text"
@@ -177,7 +182,9 @@ const CreateUser = () => {
                             required
                         />
                     </FormRow>
-                    <ButtonContainer> {/* 계정 생성 버튼을 폼 내부로 이동 */}
+                    <ButtonContainer>
+                        {' '}
+                        {/* 계정 생성 버튼을 폼 내부로 이동 */}
                         <Button type="submit">계정 생성</Button>
                     </ButtonContainer>
                 </form>
