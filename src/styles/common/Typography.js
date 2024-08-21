@@ -66,6 +66,11 @@ export const StyledNavLink = styled(RouterNavLink)`
     }
 `;
 
+export const ButtonContainer = styled.div`
+    text-align: center;
+    margin-top: 20px;
+`;
+
 export const Button = styled.button`
     padding: 10px 20px;
     background-color: #f2f2f2;

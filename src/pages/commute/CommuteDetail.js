@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import CommuteDetailTable from '../../components/table/CommuteDetailTable';
-import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
+import { Title, SubTitle, Divider, StyledNavLink, Button, ButtonContainer } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
+import { useAuth } from '../../AuthContext';
 
-const CommuteDetailPage = () => {
+const CommuteDetail = () => {
     const { commuteId } = useParams();
     const [detail, setDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     const fetchCommuteDetail = async () => {
         try {
@@ -27,6 +30,17 @@ const CommuteDetailPage = () => {
     useEffect(() => {
         fetchCommuteDetail();
     }, [commuteId]);
+
+    useEffect(() => {
+        if (!isLoading && isError) {
+            alert('상세 데이터를 불러올 수 없습니다. 이전 페이지로 돌아갑니다.');
+            navigate(-1);
+        }
+    }, [isLoading, isError, navigate]);
+
+    const handleEdit = () => {
+        navigate(`/commute/${commuteId}/edit`);
+    };
 
     const leftContent = (
         <div>
@@ -50,11 +64,16 @@ const CommuteDetailPage = () => {
     const mainContent = (
         <div>
             <Title>근태 상세 정보</Title>
-            <CommuteDetailTable detail={detail} isLoading={isLoading} isError={isError} />
+            <CommuteDetailTable detail={detail} />
+            {user && (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
+                <ButtonContainer>
+                    <Button onClick={handleEdit}>수정</Button>
+                </ButtonContainer>
+            )}
         </div>
     );
 
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
-export default CommuteDetailPage;
+export default CommuteDetail;

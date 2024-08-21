@@ -1,23 +1,9 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { VerticalTable } from './TableStyles';
 
-const CommuteDetailTable = ({ detail, isLoading, isError }) => {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!isLoading && isError) {
-            alert('상세 데이터를 불러올 수 없습니다. 이전 페이지로 돌아갑니다.');
-            navigate(-1);
-        }
-    }, [isLoading, isError, navigate]);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
+const CommuteDetailTable = ({ detail }) => {
     if (!detail) {
-        return null;
+        return <div>데이터를 불러오는 중입니다...</div>;
     }
 
     const { user, commute } = detail;
