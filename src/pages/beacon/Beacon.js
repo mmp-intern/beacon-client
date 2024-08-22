@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
+import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
-import BeaconTable from '../../components/table/BeaconTable'; // 비콘 테이블 컴포넌트
-import SearchBar from '../../components/searchbar/SearchBar'; // 검색 바 컴포넌트
+import BeaconTable from '../../components/table/BeaconTable';
+import SearchBar from '../../components/searchbar/SearchBar';
 import {
     Title,
     SubTitle,
@@ -20,29 +20,20 @@ const BeaconManagementPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchBy, setSearchBy] = useState('id');
     const [pageSize, setPageSize] = useState(10);
-    const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
 
-    const navigate = useNavigate(); // useNavigate 훅 사용
+    const navigate = useNavigate();
 
     const fetchData = useCallback(async () => {
-        const { column, direction } = sortConfig;
-        const sortParam = column && direction ? `&sort=${column},${direction}` : '';
-
         try {
             const response = await apiClient.get(
-                `/beacons?searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `/beacons?page=${currentPage}&size=${pageSize}&searchTerm=${searchTerm}&searchBy=${searchBy}`
             );
 
-            if (response.status !== 200) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            setData(result);
+            setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    }, [sortConfig, searchTerm, searchBy, currentPage, pageSize]);
+    }, [searchTerm, searchBy, currentPage, pageSize]);
 
     useEffect(() => {
         fetchData();
@@ -55,20 +46,13 @@ const BeaconManagementPage = () => {
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
+        fetchData();
     };
 
     const handlePageSizeChange = (e) => {
         setPageSize(Number(e.target.value));
         setCurrentPage(0);
-    };
-
-    const handleSort = (column) => {
-        let direction = 'asc';
-        if (sortConfig.column === column) {
-            direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
-        }
-        setSortConfig({ column, direction });
-        setCurrentPage(0);
+        fetchData();
     };
 
     const handleRegister = (userId, beaconId) => {
@@ -90,7 +74,7 @@ const BeaconManagementPage = () => {
     };
 
     const handleRegisterClick = () => {
-        navigate('/registerBeacon'); // 등록 버튼 클릭 시 비콘 등록 페이지로 이동
+        navigate('/registerBeacon');
     };
 
     const leftContent = (
@@ -103,7 +87,7 @@ const BeaconManagementPage = () => {
             <StyledNavLink to="/registerBeacon" activeClassName="active">
                 비콘 정보 등록
             </StyledNavLink>
-            <StyledNavLink to="/registerbeacon" activeClassName="active">
+            <StyledNavLink to="/editbeacon" activeClassName="active">
                 비콘 정보 수정
             </StyledNavLink>
         </div>
@@ -131,12 +115,10 @@ const BeaconManagementPage = () => {
             </PageSizeContainer>
             <BeaconTable
                 data={data}
-                sortConfig={sortConfig}
-                handleSort={handleSort}
                 currentPage={currentPage}
                 handlePageChange={handlePageChange}
                 pageSize={pageSize}
-                handleRegister={handleRegisterClick} // 등록 버튼 클릭 시 리다이렉트
+                handleRegister={handleRegisterClick}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
             />
