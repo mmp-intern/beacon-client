@@ -13,6 +13,7 @@ const MyProfile = () => {
         phone: '',
         email: '',
         position: '',
+        role: '', 
     });
 
     const fetchProfileData = async () => {
@@ -39,7 +40,7 @@ const MyProfile = () => {
     const mainContent = (
         <div>
             <Title>마이페이지</Title>
-            <UserProfileTableComponent user={profile} />
+            <UserProfileTableComponent user={profile} role={profile.role} /> {/* role을 전달 */}
         </div>
     );
 
