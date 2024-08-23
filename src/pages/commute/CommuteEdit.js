@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { FormWrapper, FormRow, Label, Input } from '../../styles/common/FormStyles';
@@ -21,7 +21,7 @@ const CommuteEdit = () => {
     const navigate = useNavigate();
 
     // 기존 근태 정보 로드
-    const fetchCommuteDetail = async () => {
+    const fetchCommuteDetail = useCallback(async () => {
         try {
             setIsLoading(true);
             const response = await apiClient.get(`/commutes/${commuteId}`);
@@ -38,11 +38,11 @@ const CommuteEdit = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [commuteId]);
 
     useEffect(() => {
         fetchCommuteDetail();
-    }, [commuteId]);
+    }, [fetchCommuteDetail]);
 
     // 인풋 필드 핸들러
     const handleChange = (e) => {
