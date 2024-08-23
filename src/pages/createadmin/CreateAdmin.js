@@ -9,7 +9,6 @@ const CreateAdmin = () => {
     const [adminData, setAdminData] = useState({
         userId: '',
         password: '',
-        company: '',
     });
 
     const handleChange = (e) => {
@@ -58,9 +57,6 @@ const CreateAdmin = () => {
             <StyledNavLink to="/userlist" activeClassName="active">
                 회원 목록 조회
             </StyledNavLink>
-            <StyledNavLink to="/profile/${userId}" activeClassName="active">
-                회원 프로필 조회
-            </StyledNavLink>
             <StyledNavLink to="/users" activeClassName="active">
                 사용자 계정 생성
             </StyledNavLink>
@@ -101,17 +97,6 @@ const CreateAdmin = () => {
                             required
                         />
                         <InfoText>5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
-                    </FormRow>
-                    <FormRow>
-                        <Label>회사</Label>
-                        <Input
-                            type="text"
-                            name="company"
-                            value={adminData.company}
-                            onChange={handleChange}
-                            placeholder="회사 이름 입력"
-                            required
-                        />
                     </FormRow>
                     <ButtonContainer>
                         {' '}

@@ -5,6 +5,7 @@ const buttonColor = '#0066ff';
 const hoverColor = '#0056d2';
 const borderColor = '#ddd';
 const textColor = '#333';
+const focusColor = '#007bff'; // 포커스 상태의 색상 통일 (변수 정의)
 
 // 검색 컨테이너와 폼 컨테이너에 동일한 폭을 적용
 const containerWidth = '100%'; // 가로폭을 90%로 설정하여 화면의 대부분을 차지하도록
@@ -68,4 +69,25 @@ export const Input = styled.input`
         font-size: 12px;
         font-style: italic;
     }
+        
 `;
+
+// Select 스타일 정의
+export const Select = styled.select`
+    width: 100%;
+    padding: 12px; // padding을 Input과 일치시킴
+    border: 1px solid ${borderColor};
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+
+    &:focus {
+        border-color: ${focusColor}; // 포커스 시 테두리 색상 통일
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); // 그림자 효과 약간 줄임
+    }
+`;
+

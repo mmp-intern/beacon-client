@@ -7,8 +7,7 @@ import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 
 const RegisterBeacon = () => {
     const [formData, setFormData] = useState({
-        userId: '',
-        beaconId: '',
+        macAddr: '',  // 백엔드에서 기대하는 필드명에 맞춤
     });
 
     const handleChange = (e) => {
@@ -22,22 +21,23 @@ const RegisterBeacon = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await apiClient.post(`/registerBeacon`, formData);
+            // macAddr 필드만 포함하여 백엔드로 전송
+            const response = await apiClient.post('/beacons', formData);
 
-            if (response.status !== 200) {
+            if (response.status !== 201) {  // HTTP 201이 생성 성공 상태 코드
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             // 성공 시 처리
-            alert('비콘이 사용자와 성공적으로 매칭되었습니다.');
+            alert('비콘이 성공적으로 등록되었습니다.');
             setFormData({
-                userId: '',
-                beaconId: '',
+                macAddr: '',  // 필드를 초기화
             });
         } catch (error) {
             console.error('Error registering beacon:', error);
-            if (error.response && error.response.status === 400 && error.response.data.includes('중복')) {
-                alert('이미 등록된 비콘입니다.');
+            
+            if (error.response && error.response.status === 400) {
+                alert('잘못된 요청입니다. 요청 데이터를 확인하세요.');
             } else {
                 alert('비콘 등록에 실패했습니다.');
             }
@@ -62,25 +62,15 @@ const RegisterBeacon = () => {
 
     const mainContent = (
         <>
-            <Title>비콘 정보 등록</Title> {/* 타이틀은 기존 그대로 유지 */}
+            <Title>비콘 정보 등록</Title>
             <FormWrapper>
-                {' '}
-                {/* 폼을 전체적으로 감싸는 컨테이너 */}
                 <form onSubmit={handleSubmit}>
                     <FormRow>
-                        {' '}
-                        {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
-                        <Label>사용자 ID</Label>
-                        <Input type="text" name="userId" value={formData.userId} onChange={handleChange} required />
-                    </FormRow>
-                    <FormRow>
-                        <Label>비콘 ID</Label>
-                        <Input type="text" name="beaconId" value={formData.beaconId} onChange={handleChange} required />
+                        <Label>비콘 MAC 주소</Label>
+                        <Input type="text" name="macAddr" value={formData.macAddr} onChange={handleChange} required />
                     </FormRow>
                     <ButtonContainer>
-                        {' '}
-                        {/* 매칭 등록 버튼 */}
-                        <Button type="submit">매칭 등록</Button>
+                        <Button type="submit">등록</Button>
                     </ButtonContainer>
                 </form>
             </FormWrapper>

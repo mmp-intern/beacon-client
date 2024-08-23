@@ -17,38 +17,30 @@ const UserListPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchBy, setSearchBy] = useState('userId'); // 검색 기준 (예: userId, name 등)
+    const [searchBy, setSearchBy] = useState('id'); // 검색 기준을 'id'로 설정
     const [pageSize, setPageSize] = useState(10);
-    const [sortConfig, setSortConfig] = useState({ column: null, direction: null });
 
     const fetchData = async () => {
-        const { column, direction } = sortConfig;
-        const sortParam = column && direction ? `&sort=${column},${direction}` : '';
-
         try {
             const response = await apiClient.get(
-                `/users?searchTerm=${searchTerm}&searchBy=${searchBy}&page=${currentPage}&size=${pageSize}${sortParam}`
+                `/getusers?page=${currentPage}&size=${pageSize}&searchTerm=${searchTerm}&searchBy=${searchBy}`
             );
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Fetched data:', result);
-            setData(result);
+    
+            console.log('Fetched data:', response.data);
+    
+            setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
     useEffect(() => {
-        fetchData();
-    }, [currentPage, pageSize, sortConfig]);
+        fetchData(); // 페이지나 페이지 크기가 변경될 때만 데이터를 다시 가져옵니다.
+    }, [currentPage, pageSize]);
 
     const handleSearch = () => {
-        setCurrentPage(0);
-        fetchData();
+        setCurrentPage(0); // 검색 시 첫 페이지로 이동
+        fetchData(); // 검색 버튼을 클릭했을 때만 데이터 요청
     };
 
     const handlePageChange = (newPage) => {
@@ -60,20 +52,6 @@ const UserListPage = () => {
         setCurrentPage(0);
     };
 
-    const handleSort = (column) => {
-        let direction = 'asc';
-        if (sortConfig.column === column) {
-            if (sortConfig.direction === 'asc') {
-                direction = 'desc';
-            } else {
-                column = null;
-                direction = null;
-            }
-        }
-        setSortConfig({ column, direction });
-        setCurrentPage(0);
-    };
-
     const leftContent = (
         <div>
             <SubTitle>관리자 메뉴</SubTitle>
@@ -81,16 +59,12 @@ const UserListPage = () => {
             <StyledNavLink to="/userlist" activeClassName="active">
                 회원 목록 조회
             </StyledNavLink>
-            <StyledNavLink to="/profile/${userId}" activeClassName="active">
-                회원 프로필 조회
-            </StyledNavLink>
             <StyledNavLink to="/users" activeClassName="active">
                 사용자 계정 생성
             </StyledNavLink>
             <StyledNavLink to="/admin" activeClassName="active">
                 관리자 계정 생성
             </StyledNavLink>
-            {/* 추가적인 메뉴들 */}
         </div>
     );
 
@@ -116,8 +90,6 @@ const UserListPage = () => {
             </PageSizeContainer>
             <UserListTable
                 data={data}
-                sortConfig={sortConfig}
-                handleSort={handleSort}
                 currentPage={currentPage}
                 handlePageChange={handlePageChange}
                 pageSize={pageSize}
