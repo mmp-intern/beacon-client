@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import BeaconTable from '../../components/table/BeaconTable';
-import SearchBar from '../../components/searchbar/SearchBar';
 import {
     Title,
     SubTitle,
@@ -17,8 +16,6 @@ import apiClient from '../../apiClient';
 const BeaconManagementPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchBy, setSearchBy] = useState('id');
     const [pageSize, setPageSize] = useState(10);
 
     const navigate = useNavigate();
@@ -26,23 +23,18 @@ const BeaconManagementPage = () => {
     const fetchData = useCallback(async () => {
         try {
             const response = await apiClient.get(
-                `/beacons?page=${currentPage}&size=${pageSize}&searchTerm=${searchTerm}&searchBy=${searchBy}`
+                `/beacons?page=${currentPage}&size=${pageSize}`
             );
 
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    }, [searchTerm, searchBy, currentPage, pageSize]);
+    }, [currentPage, pageSize]);
 
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-
-    const handleSearch = () => {
-        setCurrentPage(0);
-        fetchData();
-    };
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -53,11 +45,6 @@ const BeaconManagementPage = () => {
         setPageSize(Number(e.target.value));
         setCurrentPage(0);
         fetchData();
-    };
-
-    const handleRegister = (userId, beaconId) => {
-        if (!userId || !beaconId) return;
-        console.log(`Registering beacon ${beaconId} for user ID: ${userId}`);
     };
 
     const handleEdit = (userId) => {
