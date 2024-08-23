@@ -179,8 +179,8 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>비콘 선택</Label>
-                        <Select name="macAddr" value={userData.beaconId} onChange={handleChange} required>
+                        <Label>비콘 (선택사항)</Label>
+                        <Select name="beaconId" value={userData.beaconId} onChange={handleChange}>
                             <option value="">비콘을 선택하세요</option>
                             {beacons.map((beacon) => (
                                 <option key={beacon.id} value={beacon.id}>

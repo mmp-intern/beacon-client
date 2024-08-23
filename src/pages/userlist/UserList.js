@@ -12,8 +12,10 @@ import {
     StyledNavLink,
 } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
+import { useAuth } from '../../AuthContext'; // AuthContext 사용
 
 const UserListPage = () => {
+    const { user } = useAuth(); // 현재 로그인된 사용자 정보 가져오기
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
     const [searchTerm, setSearchTerm] = useState('');
@@ -62,9 +64,11 @@ const UserListPage = () => {
             <StyledNavLink to="/users" activeClassName="active">
                 사용자 계정 생성
             </StyledNavLink>
-            <StyledNavLink to="/admin" activeClassName="active">
-                관리자 계정 생성
-            </StyledNavLink>
+            {user && user.role === 'SUPER_ADMIN' && (
+                <StyledNavLink to="/admin" activeClassName="active">
+                    관리자 계정 생성
+                </StyledNavLink>
+            )}
         </div>
     );
 
