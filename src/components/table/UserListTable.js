@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
-import { Table, SortArrows, SortArrowUp, SortArrowDown } from './TableStyles';
+import { Table } from './TableStyles'; // 정렬 관련 컴포넌트 제거
 import Pagination from '../pagination/Pagination';
 import RegisterButton from '../Beaconbutton/RegisterButton';
 import styled from 'styled-components'; 
 
-const UserListTable = ({ data, sortConfig, handleSort, currentPage, handlePageChange, pageSize }) => {
-    const navigate = useNavigate(); // useNavigate 훅 사용
+const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => { 
+    const navigate = useNavigate();
+    const [selectedRow, setSelectedRow] = useState(null);
 
     const currentData = data.content;
 
@@ -15,7 +16,7 @@ const UserListTable = ({ data, sortConfig, handleSort, currentPage, handlePageCh
         { key: 'userId', label: '아이디' },
         { key: 'name', label: '사원명' },
         { key: 'email', label: '이메일' },
-        { key: 'phoneNumber', label: '전화번호' },
+        { key: 'phone', label: '전화번호' },
         { key: 'position', label: '직책' },
         { key: 'role', label: '역할' },
     ];
@@ -24,43 +25,61 @@ const UserListTable = ({ data, sortConfig, handleSort, currentPage, handlePageCh
         navigate('/users'); // 사용자 계정 생성 페이지로 리다이렉트
     };
 
+    const handleRowClick = (id) => {
+        // 동일한 행을 클릭하면 선택 해제, 그렇지 않으면 선택된 행으로 설정
+        if (selectedRow === id) {
+            setSelectedRow(null);
+        } else {
+            setSelectedRow(id);
+        }
+    };
+
+    const handleUserClick = (userId) => {
+        navigate(`/profile/${userId}`);
+    };
+
     return (
         <div>
             <Table>
                 <thead>
                     <tr>
                         {columns.map((column) => (
-                            <th key={column.key} onClick={() => handleSort(column.key)}>
+                            <th key={column.key}>
                                 {column.label}
-                                <SortArrows>
-                                    <SortArrowUp
-                                        active={sortConfig.column === column.key && sortConfig.direction === 'asc'}
-                                    />
-                                    <SortArrowDown
-                                        active={sortConfig.column === column.key && sortConfig.direction === 'desc'}
-                                    />
-                                </SortArrows>
                             </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {currentData.map((item, index) => (
-                        <tr key={item.userId}>
+                        <tr
+                            key={item.id}
+                            onClick={() => handleRowClick(item.id)}
+                            style={{
+                                backgroundColor: selectedRow === item.id ? '#f0f0f0' : 'transparent',
+                                cursor: 'pointer',
+                            }}
+                            
+                        >
                             <td>{index + 1 + currentPage * pageSize}</td>
-                            <td>{item.userId}</td>
-                            <td>{item.name}</td>
-                            <td>{item.email}</td>
-                            <td>{item.phoneNumber}</td>
-                            <td>{item.position}</td>
-                            <td>{item.role}</td>
+                            <td 
+                                style={{ cursor: 'pointer', color: 'blue' }} 
+                                onClick={() => handleUserClick(item.userId)}
+                            >
+                                {item.userId || '-'}
+                            </td>
+                            <td>{item.name || '-'}</td>
+                            <td>{item.email || '-'}</td>
+                            <td>{item.phone || '-'}</td>
+                            <td>{item.position || '-'}</td>
+                            <td>{item.role || '-'}</td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
             <Pagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePageChange} />
             <ButtonContainer>
-                <RegisterButton onClick={handleRegisterClick} /> {/* 비콘 등록 버튼을 사용자 계정 생성 버튼으로 사용 */}
+                <RegisterButton onClick={handleRegisterClick} />
             </ButtonContainer>
         </div>
     );

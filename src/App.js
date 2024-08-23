@@ -17,6 +17,7 @@ import UserList from './pages/userlist/UserList';
 import Beacon from './pages/beacon/Beacon';
 import BeaconRegister from './pages/beacon/BeaconRegister';
 import BeaconEdit from './pages/beacon/BeaconEdit';
+import EditProfile from './pages/profile/Editprofile';
 
 const PrivateRoute = ({ children, roles }) => {
     const { user } = useAuth();
@@ -147,6 +148,14 @@ const App = () => {
                         element={
                             <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
                                 <BeaconEdit />
+                            </PrivateRoute>
+                        }
+                    />
+                     <Route
+                        path="/profile/:userId/edit"
+                        element={
+                            <PrivateRoute roles={['SUPER_ADMIN', 'ADMIN']}>
+                                <EditProfile />  {/* 이 부분을 EditProfile로 수정 */}
                             </PrivateRoute>
                         }
                     />

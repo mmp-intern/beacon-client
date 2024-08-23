@@ -15,6 +15,7 @@ const UserProfileTableComponent = ({ user, role }) => {
             { key: 'email', label: '이메일' },
             { key: 'position', label: '직책' },
             { key: 'role', label: '권한' },
+            { key: 'macAddr', label: 'Mac주소' },
         ];
 
     return (

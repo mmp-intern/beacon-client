@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
-import { Label, Input, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
+import { Label, Input, Select, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles'; // Option을 제외
 import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 import { useAuth } from '../../AuthContext';
 
@@ -15,14 +15,30 @@ const CreateUser = () => {
         phone: '',
         position: '',
         password: '',
-        company: '',
+        beaconId: '',  // 비콘 ID를 저장할 상태
     });
+
+    const [beacons, setBeacons] = useState([]);
+
+    // 비콘 목록을 서버에서 불러오는 함수
+    useEffect(() => {
+        const fetchBeacons = async () => {
+            try {
+                const response = await apiClient.get('/beacons');
+                setBeacons(response.data.content || []);  // API 응답 데이터를 배열로 저장
+            } catch (error) {
+                console.error('Error fetching beacons:', error);
+                setBeacons([]);  // 오류 발생 시 빈 배열로 설정
+            }
+        };
+
+        fetchBeacons();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         if (name === 'phone') {
-            // 전화번호 입력 시 하이픈 자동 추가
             const formattedPhone = formatPhoneNumber(value);
             setUserData({
                 ...userData,
@@ -36,9 +52,8 @@ const CreateUser = () => {
         }
     };
 
-    // 전화번호 포맷팅 함수
     const formatPhoneNumber = (phoneNumber) => {
-        phoneNumber = phoneNumber.replace(/[^0-9]/g, ''); // 숫자만 남기기
+        phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         if (phoneNumber.length <= 3) return phoneNumber;
         if (phoneNumber.length <= 7) return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
         return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
@@ -53,7 +68,6 @@ const CreateUser = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // 성공 시 처리
             alert('사용자 계정 생성 완료');
             setUserData({
                 userId: '',
@@ -62,11 +76,11 @@ const CreateUser = () => {
                 phone: '',
                 position: '',
                 password: '',
-                company: '',
+                beaconId: '',  // 비콘 ID 초기화
             });
         } catch (error) {
-            console.error('Error creating admin account:', error);
-            if (error.response && error.response.status === 400 && error.response.data.includes('중복')) {
+            console.error('Error creating user account:', error);
+            if (error.response && error.response.status === 400 && typeof error.response.data === 'string' && error.response.data.includes('중복')) {
                 alert('중복된 아이디입니다. 다른 아이디를 사용하세요.');
             } else {
                 alert('사용자 계정 생성에 실패했습니다.');
@@ -81,9 +95,6 @@ const CreateUser = () => {
             <StyledNavLink to="/userlist" activeClassName="active">
                 회원 목록 조회
             </StyledNavLink>
-            <StyledNavLink to="/profile/${userId}" activeClassName="active">
-                회원 프로필 조회
-            </StyledNavLink>
             <StyledNavLink to="/users" activeClassName="active">
                 사용자 계정 생성
             </StyledNavLink>
@@ -97,14 +108,10 @@ const CreateUser = () => {
 
     const mainContent = (
         <>
-            <Title>사용자 계정 생성</Title> {/* 타이틀은 기존 그대로 유지 */}
+            <Title>사용자 계정 생성</Title>
             <FormWrapper>
-                {' '}
-                {/* 폼을 전체적으로 감싸는 컨테이너 */}
                 <form onSubmit={handleSubmit}>
                     <FormRow>
-                        {' '}
-                        {/* 각 필드를 세로 정렬로 감싸는 컨테이너 */}
                         <Label>사용자 ID</Label>
                         <Input
                             type="text"
@@ -125,7 +132,7 @@ const CreateUser = () => {
                             placeholder="비밀번호 입력 (예: P@ssw0rd)"
                             required
                         />
-                        <InfoText>5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합 </InfoText>
+                        <InfoText>5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
                     </FormRow>
                     <FormRow>
                         <Label>이름</Label>
@@ -172,19 +179,17 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>회사</Label>
-                        <Input
-                            type="text"
-                            name="company"
-                            value={userData.company}
-                            onChange={handleChange}
-                            placeholder="예): ABC Corp"
-                            required
-                        />
+                        <Label>비콘 선택</Label>
+                        <Select name="macAddr" value={userData.beaconId} onChange={handleChange} required>
+                            <option value="">비콘을 선택하세요</option>
+                            {beacons.map((beacon) => (
+                                <option key={beacon.id} value={beacon.id}>
+                                    {beacon.macAddr}
+                                </option>
+                            ))}
+                        </Select>
                     </FormRow>
                     <ButtonContainer>
-                        {' '}
-                        {/* 계정 생성 버튼을 폼 내부로 이동 */}
                         <Button type="submit">계정 생성</Button>
                     </ButtonContainer>
                 </form>

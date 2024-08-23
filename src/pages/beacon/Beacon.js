@@ -58,7 +58,6 @@ const BeaconManagementPage = () => {
     const handleRegister = (userId, beaconId) => {
         if (!userId || !beaconId) return;
         console.log(`Registering beacon ${beaconId} for user ID: ${userId}`);
-        // 비콘과 userId 매칭 로직 추가
     };
 
     const handleEdit = (userId) => {
@@ -96,13 +95,6 @@ const BeaconManagementPage = () => {
     const mainContent = (
         <div>
             <Title>비콘 리스트 조회</Title>
-            <SearchBar
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                handleSearch={handleSearch}
-            />
             <PageSizeContainer>
                 <PageSizeLabel>페이지당</PageSizeLabel>
                 <PageSizeSelect value={pageSize} onChange={handlePageSizeChange}>
