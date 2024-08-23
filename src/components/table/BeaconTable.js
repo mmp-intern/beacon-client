@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { Table, SortArrows, SortArrowUp, SortArrowDown } from './TableStyles';
+import { Table} from './TableStyles';
 import Pagination from '../pagination/Pagination';
 import RegisterButton from '../Beaconbutton/RegisterButton';
 import EditButton from '../Beaconbutton/EditButton';
