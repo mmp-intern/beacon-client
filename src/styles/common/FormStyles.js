@@ -67,3 +67,22 @@ export const Input = styled.input`
         font-style: italic;
     }
 `;
+
+// Select 스타일 정의
+export const Select = styled.select`
+    width: 100%;
+    padding: 12px; /* padding을 Input과 일치시킴 */
+    font-size: 14px;
+    border: 1px solid ${inputBorderColor};
+    border-radius: 8px;
+    background-color: #fff;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+
+    &:focus {
+        border-color: ${primaryColor}; // 포커스 시 테두리 색상 통일
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); // 그림자 효과 약간 추가
+    }
+`;

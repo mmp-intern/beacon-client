@@ -75,6 +75,8 @@ export const LogoutButton = styled.button`
     border-radius: 4px;
     background-color: transparent; /* 배경색을 투명하게 설정 */
     color: white; /* 텍스트 색상 */
+
+    font-size: 15px; /* 폰트 크기를 적절히 설정 */
     cursor: pointer;
     margin-left: 10px;
     

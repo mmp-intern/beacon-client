@@ -8,7 +8,7 @@ import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 
 const EditBeacon = () => {
     const location = useLocation();
-    const [macList, setMacList] = useState([]); // DB에서 가져온 MAC 주소 리스트
+    const [macList, setMacList] = useState([]); 
     const [selectedMac, setSelectedMac] = useState(location.state?.selectedMacAddr || ''); // 사용자가 선택한 기존 MAC 주소
     const [newMacAddr, setNewMacAddr] = useState(''); // 수정할 MAC 주소
 
@@ -69,7 +69,7 @@ const EditBeacon = () => {
             <SubTitle>비콘 관리</SubTitle>
             <Divider />
             <StyledNavLink to="/beacon" activeClassName="active">
-                비콘 리스트 조회
+                비콘 목록 조회
             </StyledNavLink>
             <StyledNavLink to="/registerbeacon" activeClassName="active">
                 비콘 정보 등록
@@ -107,7 +107,7 @@ const EditBeacon = () => {
                         />
                     </FormRow>
                     <ButtonContainer>
-                        <Button type="submit">정보 수정</Button>
+                        <Button type="submit">수정</Button>
                     </ButtonContainer>
                 </form>
             </FormWrapper>

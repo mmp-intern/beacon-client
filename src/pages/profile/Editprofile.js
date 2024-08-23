@@ -16,7 +16,7 @@ const EditProfile = () => {
         phone: '',
         email: '',
         position: '',
-        macAddr: '',
+        macAddr: '', // Mac 주소
     });
 
     const navigate = useNavigate();
@@ -148,6 +148,7 @@ const EditProfile = () => {
                         name="macAddr"
                         value={user.macAddr}
                         onChange={handleInputChange}
+                        disabled={!user.macAddr} // Mac 주소가 없을 경우 필드를 비활성화
                     />
                 </FormRow>
                 <ButtonContainer>
