@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import CommuteDetailTable from '../../components/table/CommuteDetailTable';
@@ -11,10 +11,10 @@ const CommuteDetail = () => {
     const [detail, setDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const [profile, setProfile] = useState(null); // profile 상태 추가
+    const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
 
-    const fetchCommuteDetail = async () => {
+    const fetchCommuteDetail = useCallback(async () => {
         try {
             setIsLoading(true);
             const response = await apiClient.get(`/commutes/${commuteId}`);
@@ -25,7 +25,7 @@ const CommuteDetail = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [commuteId]);
 
     const fetchProfile = async () => {
         try {
@@ -38,8 +38,8 @@ const CommuteDetail = () => {
 
     useEffect(() => {
         fetchCommuteDetail();
-        fetchProfile(); // 프로필 정보도 함께 로드
-    }, [commuteId]);
+        fetchProfile();
+    }, [fetchCommuteDetail]);
 
     useEffect(() => {
         if (!isLoading && isError) {
