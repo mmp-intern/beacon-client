@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import CommuteDetailTable from '../../components/table/CommuteDetailTable';
-import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
+import { Title, SubTitle, Divider, StyledNavLink, TopContainer, BackButton } from '../../styles/common/Typography';
 import { Button, ButtonContainer } from '../../styles/common/ButtonStyles';
 import apiClient from '../../apiClient';
 
@@ -52,6 +52,10 @@ const CommuteDetail = () => {
         navigate(`/commute/${commuteId}/edit`);
     };
 
+    const handleBack = () => {
+        navigate(-1);
+    };
+
     const leftContent = (
         <div>
             <SubTitle>통근 관리</SubTitle>
@@ -73,7 +77,11 @@ const CommuteDetail = () => {
 
     const mainContent = (
         <div>
-            <Title>근태 상세 정보</Title>
+            <TopContainer>
+                <BackButton onClick={handleBack} />
+                <Title>근태 상세 정보</Title>
+            </TopContainer>
+
             <CommuteDetailTable detail={detail} />
             {profile && (profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN') && (
                 <ButtonContainer>

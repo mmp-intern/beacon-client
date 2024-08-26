@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { NavLink as RouterNavLink } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 
 export const Title = styled.h1`
     text-align: center;
@@ -63,5 +64,25 @@ export const StyledNavLink = styled(RouterNavLink)`
     &:hover {
         background-color: #e0e0e0;
         color: #333;
+    }
+`;
+
+export const TopContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 25px;
+`;
+
+export const BackButton = styled(FaArrowLeft)`
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    left: 10px;
+    top: 22px;
+    color: #333;
+    &:hover {
+        color: #555;
     }
 `;
