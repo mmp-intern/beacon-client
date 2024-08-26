@@ -47,6 +47,7 @@ const CommuteYearlyStats = () => {
         setEndDate(lastDay);
         setSelectedYear(firstDay.slice(0, 4));
         fetchData(firstDay, lastDay);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchData = async (startDate = startDateState, endDate = endDateState) => {

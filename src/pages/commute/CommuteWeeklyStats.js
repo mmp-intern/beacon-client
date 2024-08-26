@@ -52,6 +52,7 @@ const CommuteWeeklyStats = () => {
         setStartDate(startDate);
         setEndDate(endDate);
         fetchData(startDate, endDate);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchData = async (startDate = startDateState, endDate = endDateState) => {

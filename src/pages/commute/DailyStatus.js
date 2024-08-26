@@ -46,6 +46,7 @@ const DailyStatus = () => {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, pageSize, sortConfig]);
 
     const handleSearch = () => {
