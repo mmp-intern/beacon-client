@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
-import { Table } from './TableStyles'; // 정렬 관련 컴포넌트 제거
+import { useNavigate } from 'react-router-dom';
+import { Table } from './TableStyles';
 import Pagination from '../pagination/Pagination';
 import RegisterButton from '../Beaconbutton/RegisterButton';
-import styled from 'styled-components'; 
+import AdminDeleteButton from '../Beaconbutton/AdminDeleteButton';
+import styled from 'styled-components';
+import apiClient from '../../apiClient';
 
-const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => { 
+const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
     const navigate = useNavigate();
     const [selectedRow, setSelectedRow] = useState(null);
 
@@ -14,26 +16,32 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
     const columns = [
         { key: 'id', label: '번호' },
         { key: 'userId', label: '아이디' },
-        { key: 'name', label: '사원명' },
-        { key: 'email', label: '이메일' },
-        { key: 'phone', label: '전화번호' },
-        { key: 'position', label: '직책' },
     ];
 
     const handleRegisterClick = () => {
-        navigate('/users'); 
+        navigate('/admin');
     };
 
     const handleRowClick = (id) => {
-        if (selectedRow === id) {
-            setSelectedRow(null);
-        } else {
-            setSelectedRow(id);
-        }
+        setSelectedRow(selectedRow === id ? null : id);
     };
 
-    const handleUserClick = (userId) => {
-        navigate(`/profile/${userId}`);
+    const handleDeleteClick = async (userId) => {
+        if (!userId) return;
+
+        try {
+            const response = await apiClient.delete(`/users/${userId}`);
+            if (response.status === 200) {
+                alert('관리자 삭제 완료');
+                setSelectedRow(null);
+                window.location.reload(); 
+            } else {
+                alert('관리자 삭제에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('관리자 삭제 중 오류가 발생했습니다.');
+        }
     };
 
     return (
@@ -52,24 +60,14 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
                     {currentData.map((item, index) => (
                         <tr
                             key={item.id}
-                            onClick={() => handleRowClick(item.id)}
+                            onClick={() => handleRowClick(item.userId)} 
                             style={{
-                                backgroundColor: selectedRow === item.id ? '#f0f0f0' : 'transparent',
+                                backgroundColor: selectedRow === item.userId ? '#f0f0f0' : 'transparent',
                                 cursor: 'pointer',
                             }}
-                            
                         >
                             <td>{index + 1 + currentPage * pageSize}</td>
-                            <td 
-                                style={{ cursor: 'pointer', color: 'blue' }} 
-                                onClick={() => handleUserClick(item.userId)}
-                            >
-                                {item.userId || '-'}
-                            </td>
-                            <td>{item.name || '-'}</td>
-                            <td>{item.email || '-'}</td>
-                            <td>{item.phone || '-'}</td>
-                            <td>{item.position || '-'}</td>
+                            <td>{item.userId || '-'}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -77,6 +75,11 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
             <Pagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePageChange} />
             <ButtonContainer>
                 <RegisterButton onClick={handleRegisterClick} />
+                <AdminDeleteButton 
+                    userId={selectedRow} 
+                    onDelete={handleDeleteClick} 
+                    disabled={!selectedRow} 
+                />
             </ButtonContainer>
         </div>
     );
@@ -88,4 +91,8 @@ const ButtonContainer = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
+
+    & > *:not(:last-child) {
+        margin-right: 10px;
+    }
 `;

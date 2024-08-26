@@ -46,3 +46,12 @@ export const BeaconDeleteButtonStyle = styled(ActionButton)`
         background-color: #1e3b6b;
     }
 `;
+
+// 삭제 버튼 스타일
+export const AdminDeleteButtonStyle = styled(ActionButton)`
+    background-color: ${buttonColor};
+
+    &:hover {
+        background-color: #1e3b6b;
+    }
+`;

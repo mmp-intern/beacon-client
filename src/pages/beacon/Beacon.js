@@ -50,13 +50,11 @@ const BeaconManagementPage = () => {
     const handleEdit = (userId) => {
         if (!userId) return;
         console.log(`Edit beacon for user ID: ${userId}`);
-        // 비콘 수정 로직 추가
     };
 
     const handleDelete = (userId) => {
         if (!userId) return;
         console.log(`Delete beacon for user ID: ${userId}`);
-        // 비콘 삭제 로직 추가
     };
 
     const handleRegisterClick = () => {
@@ -68,7 +66,7 @@ const BeaconManagementPage = () => {
             <SubTitle>비콘 관리</SubTitle>
             <Divider />
             <StyledNavLink to="/beacon" activeClassName="active">
-                비콘 목록 조회
+                비콘 정보 관리
             </StyledNavLink>
             <StyledNavLink to="/registerBeacon" activeClassName="active">
                 비콘 정보 등록
@@ -81,7 +79,7 @@ const BeaconManagementPage = () => {
 
     const mainContent = (
         <div>
-            <Title>비콘 목록 조회</Title>
+            <Title>비콘 정보 관리</Title>
             <PageSizeContainer>
                 <PageSizeLabel>페이지당</PageSizeLabel>
                 <PageSizeSelect value={pageSize} onChange={handlePageSizeChange}>

@@ -1,10 +1,10 @@
 // BeaconDeleteButton.js
 import React from 'react';
-import { BeaconDeleteButtonStyle } from './ButtonStyles'; // 경로가 올바른지 확인
+import { BeaconDeleteButtonStyle } from './ButtonStyles';
 
 const BeaconDeleteButton = ({ beaconId, macAddr, onDelete }) => {
     const handleDelete = () => {
-        if (window.confirm(`${macAddr}의 비콘을 삭제하시겠습니까?`)) {
+        if (window.confirm(`"${macAddr}" 비콘을 삭제하시겠습니까?`)) {
             onDelete(beaconId);
         }
     };
