@@ -7,7 +7,7 @@ import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 
 const RegisterBeacon = () => {
     const [formData, setFormData] = useState({
-        macAddr: '',  // 백엔드에서 기대하는 필드명에 맞춤
+        macAddr: '',
     });
 
     const handleChange = (e) => {
@@ -21,17 +21,16 @@ const RegisterBeacon = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // macAddr 필드만 포함하여 백엔드로 전송
             const response = await apiClient.post('/beacons', formData);
 
-            if (response.status !== 201) {  // HTTP 201이 생성 성공 상태 코드
+            if (response.status !== 201) {  
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             // 성공 시 처리
             alert('비콘이 성공적으로 등록되었습니다.');
             setFormData({
-                macAddr: '',  // 필드를 초기화
+                macAddr: '', 
             });
         } catch (error) {
             console.error('Error registering beacon:', error);

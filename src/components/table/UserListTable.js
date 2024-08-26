@@ -25,7 +25,6 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
     };
 
     const handleRowClick = (id) => {
-        // 동일한 행을 클릭하면 선택 해제, 그렇지 않으면 선택된 행으로 설정
         if (selectedRow === id) {
             setSelectedRow(null);
         } else {

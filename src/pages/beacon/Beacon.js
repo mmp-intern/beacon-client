@@ -50,13 +50,11 @@ const BeaconManagementPage = () => {
     const handleEdit = (userId) => {
         if (!userId) return;
         console.log(`Edit beacon for user ID: ${userId}`);
-        // 비콘 수정 로직 추가
     };
 
     const handleDelete = (userId) => {
         if (!userId) return;
         console.log(`Delete beacon for user ID: ${userId}`);
-        // 비콘 삭제 로직 추가
     };
 
     const handleRegisterClick = () => {

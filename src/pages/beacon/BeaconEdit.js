@@ -9,15 +9,14 @@ import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 const EditBeacon = () => {
     const location = useLocation();
     const [macList, setMacList] = useState([]); 
-    const [selectedMac, setSelectedMac] = useState(location.state?.selectedMacAddr || ''); // 사용자가 선택한 기존 MAC 주소
-    const [newMacAddr, setNewMacAddr] = useState(''); // 수정할 MAC 주소
+    const [selectedMac, setSelectedMac] = useState(location.state?.selectedMacAddr || ''); 
+    const [newMacAddr, setNewMacAddr] = useState(''); 
 
-    // 컴포넌트가 마운트될 때, DB에 저장된 모든 MAC 주소를 가져옵니다.
     useEffect(() => {
         const fetchMacAddresses = async () => {
             try {
-                const response = await apiClient.get('/beacons'); // DB에서 모든 MAC 주소를 가져옴
-                setMacList(response.data.content); // 가져온 데이터를 macList에 저장
+                const response = await apiClient.get('/beacons'); 
+                setMacList(response.data.content); 
             } catch (error) {
                 console.error('Error fetching MAC addresses:', error);
                 alert('MAC 주소를 불러오는 데 실패했습니다.');
@@ -37,25 +36,23 @@ const EditBeacon = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // 선택한 MAC 주소의 ID를 경로에 포함하여 PUT 요청
             const selectedMacObj = macList.find(mac => mac.macAddr === selectedMac);
             if (!selectedMacObj) {
                 throw new Error('선택된 MAC 주소에 해당하는 ID를 찾을 수 없습니다.');
             }
     
-            // 서버로 전송할 데이터는 BeaconRequest DTO에 맞게 설정
             const response = await apiClient.put(`/beacons/${selectedMacObj.id}`, {
-                macAddr: newMacAddr,  // 서버가 기대하는 필드명으로 맞춤
+                macAddr: newMacAddr,  
             });
     
-            if (response.status !== 200) {  // HTTP 200이 성공 상태 코드
+            if (response.status !== 200) { 
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
     
             // 성공 시 처리
             alert('비콘 MAC 주소가 성공적으로 수정되었습니다.');
-            setSelectedMac(''); // 선택 필드를 초기화
-            setNewMacAddr(''); // 새 MAC 주소 필드를 초기화
+            setSelectedMac(''); 
+            setNewMacAddr(''); 
         } catch (error) {
             console.error('Error editing beacon:', error);
             alert('비콘 MAC 주소 수정에 실패했습니다.');

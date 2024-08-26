@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '../../components/layout/Layout';
-import UserListTable from '../../components/table/AdminListTable'; // 재사용 가능한 테이블 컴포넌트
+import UserListTable from '../../components/table/AdminListTable'; 
 import {
     Title,
     SubTitle,

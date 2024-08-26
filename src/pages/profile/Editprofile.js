@@ -6,11 +6,11 @@ import apiClient from '../../apiClient';
 import { Label, Input, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
 import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 import Select from 'react-select';
-import { useAuth } from '../../AuthContext'; // useAuth 추가
+import { useAuth } from '../../AuthContext'; 
 
 const EditProfile = () => {
     const { userId } = useParams();
-    const { user: authUser } = useAuth(); // 현재 로그인한 사용자 정보 가져오기
+    const { user: authUser } = useAuth(); 
     const [user, setUser] = useState({
         userId: '',
         name: '',
@@ -18,13 +18,12 @@ const EditProfile = () => {
         email: '',
         position: '',
         macAddr: [],
-        password: '',  // 비밀번호 필드 추가
+        password: '', 
     });
 
-    const [beacons, setBeacons] = useState([]); // 비콘 목록을 저장할 상태 추가
+    const [beacons, setBeacons] = useState([]); 
     const navigate = useNavigate();
 
-    // 전화번호 포맷팅 함수
     const formatPhoneNumber = (phoneNumber) => {
         phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         if (phoneNumber.length <= 3) return phoneNumber;
@@ -32,7 +31,6 @@ const EditProfile = () => {
         return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
     };
 
-    // 사용자 데이터를 가져오는 함수
     const fetchUserData = useCallback(async () => {
         try {
             const response = await apiClient.get(`/profile/${userId}`);
@@ -40,7 +38,7 @@ const EditProfile = () => {
             setUser({
                 ...userData,
                 macAddr: userData.macAddr ? userData.macAddr.map(mac => ({ value: mac, label: mac })) : [],
-                password: '', // 비밀번호는 초기화 상태로 설정
+                password: '', 
             });
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -48,10 +46,9 @@ const EditProfile = () => {
         }
     }, [userId]);
 
-    // 비콘 데이터를 가져오는 함수
     const fetchBeacons = useCallback(async () => {
         try {
-            const response = await apiClient.get('/beacons'); // 비콘 목록 가져오기
+            const response = await apiClient.get('/beacons'); 
             setBeacons(response.data.content || []);
         } catch (error) {
             console.error('Error fetching beacons:', error);
@@ -59,11 +56,8 @@ const EditProfile = () => {
         }
     }, []);
 
-    // 입력 값 변경 핸들러
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
-        // 휴대폰 번호일 경우 포맷 적용
         const formattedValue = name === 'phone' ? formatPhoneNumber(value) : value;
 
         setUser((prevUser) => ({
@@ -109,7 +103,7 @@ const EditProfile = () => {
 
     useEffect(() => {
         fetchUserData();
-        fetchBeacons(); // 비콘 데이터를 가져옵니다.
+        fetchBeacons(); 
     }, [fetchUserData, fetchBeacons]);
 
     const leftContent = (
@@ -157,7 +151,7 @@ const EditProfile = () => {
                     <Label htmlFor="password">비밀번호 변경 (선택사항)</Label>
                     <div style={{ position: 'relative' }}>
                         <Input
-                            type="password"  // 비밀번호 필드를 항상 숨김 상태로 유지
+                            type="password"  
                             id="password"
                             name="password"
                             value={user.password}

@@ -1,6 +1,6 @@
 // BeaconDeleteButton.js
 import React from 'react';
-import { BeaconDeleteButtonStyle } from './ButtonStyles'; // 경로가 올바른지 확인
+import { BeaconDeleteButtonStyle } from './ButtonStyles';
 
 const BeaconDeleteButton = ({ beaconId, macAddr, onDelete }) => {
     const handleDelete = () => {

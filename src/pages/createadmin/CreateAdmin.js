@@ -21,7 +21,7 @@ const CreateAdmin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting adminData:', adminData); // 데이터 확인
+        console.log('Submitting adminData:', adminData); 
         try {
             const response = await apiClient.post(`/admin`, adminData);
 
@@ -32,7 +32,6 @@ const CreateAdmin = () => {
             const result = response.data;
             console.log(result);
 
-            // 성공 시 처리
             alert('관리자 생성 완료');
             setAdminData({
                 userId: '',

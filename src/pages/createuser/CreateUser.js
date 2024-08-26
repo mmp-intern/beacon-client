@@ -143,7 +143,7 @@ const CreateUser = () => {
                         <Label>비밀번호 <span style={{ color: 'red' }}>*</span></Label>
                         <div style={{ position: 'relative' }}>
                             <Input
-                                type="password"  // 비밀번호를 항상 숨김 상태로 유지
+                                type="password"  
                                 name="password"
                                 value={userData.password}
                                 onChange={handleChange}
