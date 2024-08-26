@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-const primaryHoverColor = '#0056d2'; // 버튼 호버 색상
-
 export const ButtonContainer = styled.div`
     text-align: center;
     margin-top: 20px;
