@@ -34,30 +34,35 @@ const EditBeacon = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const selectedMacObj = macList.find(mac => mac.macAddr === selectedMac);
-            if (!selectedMacObj) {
-                throw new Error('선택된 MAC 주소에 해당하는 ID를 찾을 수 없습니다.');
-            }
-    
-            const response = await apiClient.put(`/beacons/${selectedMacObj.id}`, {
-                macAddr: newMacAddr,  
-            });
-    
-            if (response.status !== 200) { 
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-    
-            // 성공 시 처리
-            alert('비콘 MAC 주소가 성공적으로 수정되었습니다.');
-            setSelectedMac(''); 
-            setNewMacAddr(''); 
-        } catch (error) {
-            console.error('Error editing beacon:', error);
-            alert('비콘 MAC 주소 수정에 실패했습니다.');
+    e.preventDefault();
+    try {
+        const selectedMacObj = macList.find(mac => mac.macAddr === selectedMac);
+        if (!selectedMacObj) {
+            throw new Error('선택된 MAC 주소에 해당하는 ID를 찾을 수 없습니다.');
         }
-    };
+
+        const response = await apiClient.put(`/beacons/${selectedMacObj.id}`, {
+            macAddr: newMacAddr,  
+        });
+
+        if (response.status !== 200) { 
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // 성공 시 처리
+        alert('비콘 MAC 주소가 성공적으로 수정되었습니다.');
+        setSelectedMac(''); 
+        setNewMacAddr(''); 
+
+        // 페이지 새로고침
+        window.location.reload();
+
+    } catch (error) {
+        console.error('Error editing beacon:', error);
+        alert('비콘 MAC 주소 수정에 실패했습니다.');
+    }
+};
+
     
     
 
