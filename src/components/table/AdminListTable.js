@@ -29,9 +29,6 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
     const handleDeleteClick = async (userId) => {
         if (!userId) return;
 
-        const isConfirmed = window.confirm(`"${userId}" 관리자 계정을 삭제하시겠습니까?`);
-        if (!isConfirmed) return;
-
         try {
             const response = await apiClient.delete(`/users/${userId}`);
             if (response.status === 200) {
