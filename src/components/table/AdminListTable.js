@@ -34,7 +34,7 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
             if (response.status === 200) {
                 alert('관리자 삭제 완료');
                 setSelectedRow(null);
-                navigate('/adminlist'); 
+                window.location.reload(); 
             } else {
                 alert('관리자 삭제에 실패했습니다.');
             }
@@ -60,7 +60,7 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
                     {currentData.map((item, index) => (
                         <tr
                             key={item.id}
-                            onClick={() => handleRowClick(item.userId)} // userId로 행 선택
+                            onClick={() => handleRowClick(item.userId)} 
                             style={{
                                 backgroundColor: selectedRow === item.userId ? '#f0f0f0' : 'transparent',
                                 cursor: 'pointer',
