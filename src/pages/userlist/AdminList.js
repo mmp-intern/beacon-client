@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '../../components/layout/Layout';
-import UserListTable from '../../components/table/UserListTable'; 
-import SearchBar from '../../components/searchbar/SearchBarForUser'; 
+import UserListTable from '../../components/table/AdminListTable'; // 재사용 가능한 테이블 컴포넌트
 import {
     Title,
     SubTitle,
@@ -14,18 +13,16 @@ import {
 import apiClient from '../../apiClient';
 import { useAuth } from '../../AuthContext'; 
 
-const UserListPage = () => {
+const AdminListPage = () => {
     const { user } = useAuth(); 
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState({ totalPages: 1, content: [] });
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchBy, setSearchBy] = useState('id'); 
     const [pageSize, setPageSize] = useState(10);
 
     const fetchData = useCallback(async () => {
         try {
             const response = await apiClient.get(
-                `/getusers?page=${currentPage}&size=${pageSize}&searchTerm=${searchTerm}&searchBy=${searchBy}`
+                `/getadmins?page=${currentPage}&size=${pageSize}`
             );
     
             console.log('Fetched data:', response.data);
@@ -34,17 +31,11 @@ const UserListPage = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    }, [currentPage, pageSize, searchTerm, searchBy]);
+    }, [currentPage, pageSize]);
 
-  useEffect(() => {
-    fetchData(); 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [currentPage, pageSize]);
-
-    const handleSearch = () => {
-        setCurrentPage(0); 
+    useEffect(() => {
         fetchData(); 
-    };
+    }, [fetchData, currentPage, pageSize]);
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -82,17 +73,9 @@ const UserListPage = () => {
         </div>
     );
     
-
     const mainContent = (
         <div>
-            <Title>직원 정보 관리</Title>
-            <SearchBar
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                handleSearch={handleSearch}
-            />
+            <Title>관리자 정보 관리</Title>
             <PageSizeContainer>
                 <PageSizeLabel>페이지당</PageSizeLabel>
                 <PageSizeSelect value={pageSize} onChange={handlePageSizeChange}>
@@ -115,4 +98,4 @@ const UserListPage = () => {
     return <Layout leftContent={leftContent} mainContent={mainContent} />;
 };
 
-export default UserListPage;
+export default AdminListPage;

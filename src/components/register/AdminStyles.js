@@ -63,7 +63,6 @@ export const Input = styled.input`
     &::placeholder {
         color: ${placeholderColor};
         font-size: 13px; /* 플레이스홀더 폰트 크기를 약간 증가 */
-        font-style: italic;
     }
 `;
 

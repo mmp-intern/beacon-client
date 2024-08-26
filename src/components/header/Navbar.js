@@ -25,7 +25,6 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = () => {
-        // 쿠키에서 토큰 제거
         removeCookie('access_token', { path: '/' });
         removeCookie('refresh_token', { path: '/' });
         // 로그아웃 후 리디렉션 (로그인 페이지로)
@@ -36,6 +35,19 @@ const Navbar = () => {
         navigate('/profile/me');
     };
 
+    const getRoleInKorean = (role) => {
+        switch (role) {
+            case 'SUPER_ADMIN':
+                return '슈퍼관리자';
+            case 'ADMIN':
+                return '관리자';
+            case 'USER':
+                return '직원';
+            default:
+                return role;
+        }
+    };
+
     return (
         <Nav>
             <TopBar>
@@ -43,13 +55,13 @@ const Navbar = () => {
                 <UserProfile>
                     {profile ? (
                         <>
-                            {profile.role === '슈퍼관리자' || profile.role === '관리자' ? (
+                            {profile.role === 'SUPER_ADMIN' || profile.role === 'ADMIN' ? (
                                 <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>
-                                    {profile.role}
+                                    {getRoleInKorean(profile.role)}님
                                 </span>
                             ) : (
                                 <span onClick={handleMyPage} style={{ cursor: 'pointer' }}>
-                                    {profile.name} {profile.role} 님
+                                      {profile.name} [{getRoleInKorean(profile.role)}]님
                                 </span>
                             )}
                             <LogoutButton id="logout" onClick={handleLogout}>

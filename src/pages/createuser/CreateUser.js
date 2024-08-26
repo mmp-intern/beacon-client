@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout/Layout';
 import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
 import apiClient from '../../apiClient';
-import { Label, Input, Select, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles'; // Option을 제외
+import { Label, Input, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
 import { ButtonContainer, Button } from '../../styles/common/ButtonStyles';
 import { useAuth } from '../../AuthContext';
+import Select from 'react-select';
 
 const CreateUser = () => {
     const { user } = useAuth();
@@ -15,20 +16,20 @@ const CreateUser = () => {
         phone: '',
         position: '',
         password: '',
-        beaconId: '',  // 비콘 ID를 저장할 상태
+        beaconIds: [],
     });
 
     const [beacons, setBeacons] = useState([]);
 
-    // 비콘 목록을 서버에서 불러오는 함수
     useEffect(() => {
         const fetchBeacons = async () => {
             try {
                 const response = await apiClient.get('/beacons');
-                setBeacons(response.data.content || []);  // API 응답 데이터를 배열로 저장
+                const availableBeacons = response.data.content.filter(beacon => !beacon.userId);
+                setBeacons(availableBeacons || []);
             } catch (error) {
                 console.error('Error fetching beacons:', error);
-                setBeacons([]);  // 오류 발생 시 빈 배열로 설정
+                setBeacons([]);
             }
         };
 
@@ -52,6 +53,13 @@ const CreateUser = () => {
         }
     };
 
+    const handleBeaconChange = (selectedOptions) => {
+        setUserData({
+            ...userData,
+            beaconIds: selectedOptions ? selectedOptions.map(option => option.value) : [],
+        });
+    };
+
     const formatPhoneNumber = (phoneNumber) => {
         phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         if (phoneNumber.length <= 3) return phoneNumber;
@@ -68,7 +76,7 @@ const CreateUser = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            alert('사용자 계정 생성 완료');
+            alert('직원 계정 생성 완료');
             setUserData({
                 userId: '',
                 name: '',
@@ -76,14 +84,14 @@ const CreateUser = () => {
                 phone: '',
                 position: '',
                 password: '',
-                beaconId: '',  // 비콘 ID 초기화
+                beaconIds: [],
             });
         } catch (error) {
             console.error('Error creating user account:', error);
             if (error.response && error.response.status === 400 && typeof error.response.data === 'string' && error.response.data.includes('중복')) {
                 alert('중복된 아이디입니다. 다른 아이디를 사용하세요.');
             } else {
-                alert('사용자 계정 생성에 실패했습니다.');
+                alert('직원 계정 생성에 실패했습니다.');
             }
         }
     };
@@ -93,26 +101,35 @@ const CreateUser = () => {
             <SubTitle>관리자 메뉴</SubTitle>
             <Divider />
             <StyledNavLink to="/userlist" activeClassName="active">
-                회원 목록 조회
-            </StyledNavLink>
-            <StyledNavLink to="/users" activeClassName="active">
-                사용자 계정 생성
+                직원 정보 관리
             </StyledNavLink>
             {user && user.role === 'SUPER_ADMIN' && (
-                <StyledNavLink to="/admin" activeClassName="active">
-                    관리자 계정 생성
-                </StyledNavLink>
+                <>
+                    <StyledNavLink to="/adminlist" activeClassName="active">
+                        관리자 정보 관리
+                    </StyledNavLink>
+                </>
+            )}
+            <StyledNavLink to="/users" activeClassName="active">
+                직원 계정 생성
+            </StyledNavLink>
+            {user && user.role === 'SUPER_ADMIN' && (
+                <>
+                    <StyledNavLink to="/admin" activeClassName="active">
+                        관리자 계정 생성
+                    </StyledNavLink>
+                </>
             )}
         </div>
     );
 
     const mainContent = (
         <>
-            <Title>사용자 계정 생성</Title>
+            <Title>직원 계정 생성</Title>
             <FormWrapper>
                 <form onSubmit={handleSubmit}>
                     <FormRow>
-                        <Label>사용자 ID</Label>
+                        <Label>사용자 ID <span style={{ color: 'red' }}>*</span></Label>
                         <Input
                             type="text"
                             name="userId"
@@ -123,19 +140,21 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>비밀번호</Label>
-                        <Input
-                            type="password"
-                            name="password"
-                            value={userData.password}
-                            onChange={handleChange}
-                            placeholder="비밀번호 입력 (예: P@ssw0rd)"
-                            required
-                        />
-                        <InfoText>5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
+                        <Label>비밀번호 <span style={{ color: 'red' }}>*</span></Label>
+                        <div style={{ position: 'relative' }}>
+                            <Input
+                                type="password"  // 비밀번호를 항상 숨김 상태로 유지
+                                name="password"
+                                value={userData.password}
+                                onChange={handleChange}
+                                placeholder="비밀번호 입력 (예: P@ssw0rd)"
+                                required
+                            />
+                        </div>
+                        <InfoText>16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
                     </FormRow>
                     <FormRow>
-                        <Label>이름</Label>
+                        <Label>이름 <span style={{ color: 'red' }}>*</span></Label>
                         <Input
                             type="text"
                             name="name"
@@ -146,7 +165,7 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>이메일</Label>
+                        <Label>이메일 <span style={{ color: 'red' }}>*</span></Label>
                         <Input
                             type="email"
                             name="email"
@@ -157,7 +176,7 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>전화번호</Label>
+                        <Label>전화번호 <span style={{ color: 'red' }}>*</span></Label>
                         <Input
                             type="text"
                             name="phone"
@@ -168,7 +187,7 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>직책</Label>
+                        <Label>직책 <span style={{ color: 'red' }}>*</span></Label>
                         <Input
                             type="text"
                             name="position"
@@ -179,15 +198,22 @@ const CreateUser = () => {
                         />
                     </FormRow>
                     <FormRow>
-                        <Label>비콘 (선택사항)</Label>
-                        <Select name="beaconId" value={userData.beaconId} onChange={handleChange}>
-                            <option value="">비콘을 선택하세요</option>
-                            {beacons.map((beacon) => (
-                                <option key={beacon.id} value={beacon.id}>
-                                    {beacon.macAddr}
-                                </option>
-                            ))}
-                        </Select>
+                        <Label>비콘 (다수 선택 가능)</Label>
+                        <Select
+                            isMulti
+                            name="beacons"
+                            options={beacons.map(beacon => ({
+                                value: beacon.id,
+                                label: beacon.macAddr,
+                            }))}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            onChange={handleBeaconChange}
+                            value={userData.beaconIds.map(id => ({
+                                value: id,
+                                label: beacons.find(beacon => beacon.id === id)?.macAddr || id,
+                            }))}
+                        />
                     </FormRow>
                     <ButtonContainer>
                         <Button type="submit">계정 생성</Button>

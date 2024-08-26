@@ -60,9 +60,12 @@ export const UserProfile = styled.div`
     gap: 10px;
 
     span {
-        margin-right: 20px;
+        margin-right: 10px;
+        font-weight: bold; 
+        font-size: 15px; 
     }
 `;
+
 
 export const Divider = styled.div`
     height: 0.5px;
@@ -74,13 +77,14 @@ export const LogoutButton = styled.button`
     border: none; /* 경계를 없앰 */
     border-radius: 4px;
     background-color: transparent; /* 배경색을 투명하게 설정 */
-    color: white; /* 텍스트 색상 */
+    color: rgba(255, 255, 255, 0.6); /* 텍스트 색상: 비활성화된 것처럼 보이게 하기 위해 불투명하게 설정 */
+    font-size: 15px; 
+    margin-right: 10px;
+    transition: color 0.3s ease, background-color 0.3s ease; /* 색상과 배경색 전환에 애니메이션 적용 */
 
-    font-size: 15px; /* 폰트 크기를 적절히 설정 */
-    cursor: pointer;
-    margin-left: 10px;
-    
     &:hover {
+        color: white; /* 호버 시 텍스트를 완전히 하얗게 */
         background-color: rgba(255, 255, 255, 0.1); /* 호버 시 약간의 투명도 있는 배경 */
     }
 `;
+

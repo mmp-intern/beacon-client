@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '../../components/layout/Layout';
 import UserProfileTableComponent from '../../components/table/UserProfileTable';
 import { useAuth } from '../../AuthContext';
 import { Title, SubTitle, Divider } from '../../styles/common/Typography';
 
 const MyProfile = () => {
-    const { user, apiClient } = useAuth();
+    const { apiClient } = useAuth();  
     console.log('apiClient:', apiClient);
     const [profile, setProfile] = useState({
         userId: '',
@@ -16,19 +16,19 @@ const MyProfile = () => {
         role: '', 
     });
 
-    const fetchProfileData = async () => {
+    const fetchProfileData = useCallback(async () => {
         try {
             const response = await apiClient.get('/profile/me');
-            console.log('API Response:', response); // API 응답 로그
-            setProfile(response.data); // 응답 데이터를 상태로 설정
+            console.log('API Response:', response); 
+            setProfile(response.data); 
         } catch (error) {
             console.error('Error fetching profile data:', error);
         }
-    };
+    }, [apiClient]);  
 
     useEffect(() => {
         fetchProfileData();
-    }, []);
+    }, [fetchProfileData]);
 
     const leftContent = (
         <div>
@@ -40,7 +40,7 @@ const MyProfile = () => {
     const mainContent = (
         <div>
             <Title>마이페이지</Title>
-            <UserProfileTableComponent user={profile} role={profile.role} /> {/* role을 전달 */}
+            <UserProfileTableComponent user={profile} role={profile.role} /> 
         </div>
     );
 
