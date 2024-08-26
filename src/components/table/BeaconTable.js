@@ -39,6 +39,7 @@ const BeaconTable = ({
             const response = await apiClient.delete(`/beacons/${beaconId}`);
             if (response.status === 204) {
                 alert('비콘이 성공적으로 삭제되었습니다.');
+                window.location.reload();  
             } else {
                 alert('비콘 삭제에 실패했습니다.');
             }
@@ -47,6 +48,7 @@ const BeaconTable = ({
             alert('비콘 삭제 중 오류가 발생했습니다.');
         }
     };
+    
 
     const columns = [
         { key: 'id', label: '번호' },

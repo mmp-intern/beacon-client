@@ -76,7 +76,7 @@ const Navbar = () => {
             <Divider />
             <BottomBar>
                 <Logo>
-                    <a href="/">엄김조</a>
+                    <a href="/">MKM</a>
                 </Logo>
                 <Menu>
                     <NavItem href="/">

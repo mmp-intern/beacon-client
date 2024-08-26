@@ -22,7 +22,7 @@ const Login = () => {
 
     return (
         <LoginContainer>
-            <LoginTitle>엄김조</LoginTitle>
+            <LoginTitle>MKM</LoginTitle>
            
                 <LoginInput
                     type="text"
