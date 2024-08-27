@@ -14,7 +14,7 @@ import CreateUser from './pages/createuser/CreateUser';
 import UserProfile from './pages/profile/UserProfile';
 import MyProfile from './pages/profile/MyProfile';
 import UserList from './pages/userlist/UserList';
-import Beacon from './pages/beacon/Beacon';
+import Beacon from './pages/beacon/BeaconList';
 import BeaconRegister from './pages/beacon/BeaconRegister';
 import BeaconEdit from './pages/beacon/BeaconEdit';
 import EditProfile from './pages/profile/Editprofile';

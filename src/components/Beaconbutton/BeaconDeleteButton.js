@@ -1,16 +1,15 @@
-// BeaconDeleteButton.js
 import React from 'react';
 import { BeaconDeleteButtonStyle } from './ButtonStyles';
 
-const BeaconDeleteButton = ({ beaconId, macAddr, onDelete }) => {
+const BeaconDeleteButton = ({ onDelete, disabled }) => {
     const handleDelete = () => {
-        if (window.confirm(`"${macAddr}" 비콘을 삭제하시겠습니까?`)) {
-            onDelete(beaconId);
+        if (window.confirm('선택된 비콘들을 삭제하시겠습니까?')) {
+            onDelete();
         }
     };
 
     return (
-        <BeaconDeleteButtonStyle onClick={handleDelete} disabled={!beaconId}>
+        <BeaconDeleteButtonStyle onClick={handleDelete} disabled={disabled}>
             삭제
         </BeaconDeleteButtonStyle>
     );
