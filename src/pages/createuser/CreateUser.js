@@ -151,7 +151,7 @@ const CreateUser = () => {
                                 required
                             />
                         </div>
-                        <InfoText>16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
+                        <InfoText>5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
                     </FormRow>
                     <FormRow>
                         <Label>이름 <span style={{ color: 'red' }}>*</span></Label>

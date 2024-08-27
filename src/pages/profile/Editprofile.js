@@ -156,9 +156,9 @@ const EditProfile = () => {
                             name="password"
                             value={user.password}
                             onChange={handleInputChange}
-                            placeholder="변경할 비밀번호를 입력하세요"
+                            placeholder="변경하지 않으려면 입력란를 비워두세요."
                         />
-                        <InfoText>변경하지 않으려면 입력란를 비워두세요.</InfoText>
+                        <InfoText> 5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
                     </div>
                 </FormRow>
                 <FormRow>
