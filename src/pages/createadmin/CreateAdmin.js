@@ -100,7 +100,7 @@ const CreateAdmin = () => {
                             placeholder="비밀번호 입력 (예: P@ssw0rd)"
                             required
                         />
-                        <InfoText>16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
+                        <InfoText>5자 이상 ~ 16자 이내 입력. 영문 대문자, 소문자, 숫자 중 2종류 혼합</InfoText>
                     </FormRow>
                     <ButtonContainer>
                         <Button type="submit">계정 생성</Button>
