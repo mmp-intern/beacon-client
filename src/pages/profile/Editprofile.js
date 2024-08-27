@@ -76,18 +76,26 @@ const EditProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form is being submitted');
-
+    
+        // 비밀번호 필드가 비어 있으면 해당 필드를 제외합니다.
         const updatedUser = {
             ...user,
             macAddr: user.macAddr.map(option => option.value),
         };
-
+    
+        // 만약 비밀번호가 비어 있지 않다면, updatedUser에 포함시킵니다.
+        if (user.password) {
+            updatedUser.password = user.password;
+        } else {
+            delete updatedUser.password; // 비어 있는 경우 아예 필드를 제거합니다.
+        }
+    
         console.log('Submitting form with data:', updatedUser);
-
+    
         try {
             const response = await apiClient.put(`/profile/${userId}`, updatedUser);
             console.log('API response:', response);
-
+    
             if (response.status === 200) {
                 alert('프로필이 성공적으로 수정되었습니다.');
                 navigate(`/profile/${userId}`);
@@ -100,6 +108,7 @@ const EditProfile = () => {
             alert('프로필 수정 중 오류가 발생했습니다.');
         }
     };
+    
 
     useEffect(() => {
         fetchUserData();
