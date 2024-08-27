@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Table } from './TableStyles';
 import Pagination from '../pagination/Pagination';
-import styled from 'styled-components'; 
 
-const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => { 
+const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
     const navigate = useNavigate();
     const [selectedRow, setSelectedRow] = useState(null);
 
@@ -30,9 +29,7 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
                 <thead>
                     <tr>
                         {columns.map((column) => (
-                            <th key={column.key}>
-                                {column.label}
-                            </th>
+                            <th key={column.key}>{column.label}</th>
                         ))}
                     </tr>
                 </thead>
