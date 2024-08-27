@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
-import { Table } from './TableStyles'; // 정렬 관련 컴포넌트 제거
+import { useNavigate } from 'react-router-dom';
+import { Table } from './TableStyles';
 import Pagination from '../pagination/Pagination';
-import RegisterButton from '../Beaconbutton/RegisterButton';
 import styled from 'styled-components'; 
 
 const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => { 
@@ -20,19 +19,8 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
         { key: 'position', label: '직책' },
     ];
 
-    const handleRegisterClick = () => {
-        navigate('/users'); 
-    };
-
-    const handleRowClick = (id) => {
-        if (selectedRow === id) {
-            setSelectedRow(null);
-        } else {
-            setSelectedRow(id);
-        }
-    };
-
-    const handleUserClick = (userId) => {
+    const handleRowClick = (id, userId) => {
+        setSelectedRow(id);
         navigate(`/profile/${userId}`);
     };
 
@@ -52,20 +40,14 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
                     {currentData.map((item, index) => (
                         <tr
                             key={item.id}
-                            onClick={() => handleRowClick(item.id)}
+                            onClick={() => handleRowClick(item.id, item.userId)}
                             style={{
                                 backgroundColor: selectedRow === item.id ? '#f0f0f0' : 'transparent',
                                 cursor: 'pointer',
                             }}
-                            
                         >
                             <td>{index + 1 + currentPage * pageSize}</td>
-                            <td 
-                                style={{ cursor: 'pointer', color: 'blue' }} 
-                                onClick={() => handleUserClick(item.userId)}
-                            >
-                                {item.userId || '-'}
-                            </td>
+                            <td>{item.userId || '-'}</td>
                             <td>{item.name || '-'}</td>
                             <td>{item.email || '-'}</td>
                             <td>{item.phone || '-'}</td>
@@ -75,17 +57,8 @@ const UserListTable = ({ data, currentPage, handlePageChange, pageSize }) => {
                 </tbody>
             </Table>
             <Pagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePageChange} />
-            <ButtonContainer>
-                <RegisterButton onClick={handleRegisterClick} />
-            </ButtonContainer>
         </div>
     );
 };
 
 export default UserListTable;
-
-const ButtonContainer = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-`;

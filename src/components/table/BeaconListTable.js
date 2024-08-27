@@ -1,59 +1,53 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { Table } from './TableStyles';
 import Pagination from '../pagination/Pagination';
-import RegisterButton from '../Beaconbutton/RegisterButton';
-import EditButton from '../Beaconbutton/EditButton';
 import BeaconDeleteButton from '../Beaconbutton/BeaconDeleteButton';
 import apiClient from '../../apiClient';
 
-const BeaconTable = ({
+const BeaconListTable = ({
     data,
     currentPage,
     handlePageChange,
     pageSize,
-    handleRegister,
-    handleEdit,
 }) => {
-    const navigate = useNavigate();
-    const [selectedRow, setSelectedRow] = useState(null);
+    const [selectedRows, setSelectedRows] = useState([]);
 
     const currentData = data.content;
 
-    const handleEditClick = () => {
-        const selectedMacAddr = currentData.find(item => item.id === selectedRow)?.macAddr;
-        navigate('/editbeacon', { state: { selectedMacAddr } });
+    const handleCheckboxChange = (id) => {
+        setSelectedRows(prevSelected =>
+            prevSelected.includes(id)
+                ? prevSelected.filter(rowId => rowId !== id)
+                : [...prevSelected, id]
+        );
     };
 
-    const handleRowClick = (id) => {
-        if (selectedRow === id) {
-            setSelectedRow(null);
+    const handleSelectAllClick = () => {
+        if (selectedRows.length === currentData.length) {
+            setSelectedRows([]); // 모든 선택 취소
         } else {
-            setSelectedRow(id);
+            setSelectedRows(currentData.map(item => item.id)); // 모든 항목 선택
         }
     };
 
-    const handleDelete = async (beaconId) => {
+    const handleDeleteSelected = async () => {
         try {
-            const response = await apiClient.delete(`/beacons/${beaconId}`);
-            if (response.status === 204) {
-                alert('비콘이 성공적으로 삭제되었습니다.');
-                window.location.reload();  
-            } else {
-                alert('비콘 삭제에 실패했습니다.');
-            }
+            const deletePromises = selectedRows.map(beaconId =>
+                apiClient.delete(`/beacons/${beaconId}`)
+            );
+            await Promise.all(deletePromises);
+            alert('선택된 비콘들이 성공적으로 삭제되었습니다.');
+            window.location.reload();  
         } catch (error) {
-            console.error('Error deleting beacon:', error);
+            console.error('Error deleting beacons:', error);
             alert('비콘 삭제 중 오류가 발생했습니다.');
         }
     };
-    
 
     const columns = [
+        { key: 'checkbox', label: <input type="checkbox" onChange={handleSelectAllClick} checked={selectedRows.length === currentData.length && selectedRows.length > 0} /> },
         { key: 'id', label: '번호' },
-        { key: 'userId', label: '아이디' },
-        { key: 'name', label: '사원명' },
         { key: 'macAddr', label: 'MAC 주소' },
     ];
 
@@ -73,15 +67,19 @@ const BeaconTable = ({
                     {currentData.map((item, index) => (
                         <tr
                             key={item.id}
-                            onClick={() => handleRowClick(item.id)}
                             style={{
-                                backgroundColor: selectedRow === item.id ? '#f0f0f0' : 'transparent',
+                                backgroundColor: selectedRows.includes(item.id) ? '#f0f0f0' : 'transparent',
                                 cursor: 'pointer',
                             }}
                         >
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    checked={selectedRows.includes(item.id)}
+                                    onChange={() => handleCheckboxChange(item.id)}
+                                />
+                            </td>
                             <td>{index + 1 + currentPage * pageSize}</td>
-                            <td>{item.userId || '-'}</td>
-                            <td>{item.userName || '-'}</td>
                             <td>{item.macAddr || '-'}</td>
                         </tr>
                     ))}
@@ -89,20 +87,16 @@ const BeaconTable = ({
             </Table>
             <Pagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePageChange} />
             <ButtonContainer>
-                <RegisterButton onClick={handleRegister} />
-                <EditButton onClick={handleEditClick} />
                 <BeaconDeleteButton
-                    onDelete={handleDelete}
-                    beaconId={selectedRow}
-                    macAddr={currentData.find(item => item.id === selectedRow)?.macAddr}
-                    disabled={!selectedRow}
+                    onDelete={handleDeleteSelected}
+                    disabled={selectedRows.length === 0}
                 />
             </ButtonContainer>
         </div>
     );
 };
 
-export default BeaconTable;
+export default BeaconListTable;
 
 const ButtonContainer = styled.div`
     display: flex;

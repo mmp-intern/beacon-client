@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
-import BeaconTable from '../../components/table/BeaconTable';
+import BeaconTable from '../../components/table/BeaconListTable';
 import {
     Title,
     SubTitle,

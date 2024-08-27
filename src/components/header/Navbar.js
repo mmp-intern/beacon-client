@@ -51,7 +51,7 @@ const Navbar = () => {
     return (
         <Nav>
             <TopBar>
-                <div>MMP</div>
+                <div></div>
                 <UserProfile>
                     {profile ? (
                         <>

@@ -27,8 +27,9 @@ const getRoleInKorean = (role) => {
     }
 };
 
-const UserProfileTableComponent = ({ user, role }) => {
-    const fields = role === 'SUPER_ADMIN' || role === 'ADMIN'
+const UserProfileTableComponent = ({ user }) => {
+    // user.role이 ADMIN 또는 SUPER_ADMIN인 경우 아이디와 권한만 표시
+    const fields = user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'
         ? [
             { key: 'userId', label: '아이디' },
             { key: 'role', label: '권한', format: getRoleInKorean }

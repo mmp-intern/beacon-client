@@ -24,14 +24,14 @@ const CreateAdmin = () => {
         console.log('Submitting adminData:', adminData); 
         try {
             const response = await apiClient.post(`/admin`, adminData);
-
+    
             if (response.status !== 200) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+    
             const result = response.data;
             console.log(result);
-
+    
             alert('관리자 생성 완료');
             setAdminData({
                 userId: '',
@@ -39,13 +39,21 @@ const CreateAdmin = () => {
             });
         } catch (error) {
             console.error('Error creating admin account:', error);
-            if (error.response && error.response.status === 400 && error.response.data.includes('중복')) {
-                alert('중복된 아이디입니다. 다른 아이디를 사용하세요.');
+            if (error.response && error.response.status === 400) {
+                const responseData = error.response.data;
+                if (typeof responseData === 'string' && responseData.includes('중복')) {
+                    alert('중복된 아이디입니다. 다른 아이디를 사용하세요.');
+                } else if (responseData.message && responseData.message.includes('중복')) {
+                    alert('중복된 아이디입니다. 다른 아이디를 사용하세요.');
+                } else {
+                    alert('관리자 계정 생성에 실패했습니다.');
+                }
             } else {
                 alert('관리자 계정 생성에 실패했습니다.');
             }
         }
     };
+    
 
     const leftContent = (
         <div>
