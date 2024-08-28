@@ -25,10 +25,12 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = () => {
-        removeCookie('access_token', { path: '/' });
-        removeCookie('refresh_token', { path: '/' });
-        // 로그아웃 후 리디렉션 (로그인 페이지로)
-        window.location.href = '/login';
+        const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
+        if (confirmLogout) { 
+            removeCookie('access_token', { path: '/' });
+            removeCookie('refresh_token', { path: '/' });
+            window.location.href = '/login';
+        }
     };
 
     const handleMyPage = () => {
