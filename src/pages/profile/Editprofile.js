@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '../../components/layout/Layout';
-import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
+import { Title, SubTitle, Divider, StyledNavLink, TopContainer, BackButton } from '../../styles/common/Typography';
 import { useParams, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
 import { Label, Input, FormRow, FormWrapper, InfoText } from '../../components/register/AdminStyles';
@@ -109,6 +109,9 @@ const EditProfile = () => {
     }
 };
 
+    const handleBack = () => {
+    navigate(-1); // 이전 페이지로 이동
+     };
 
     useEffect(() => {
         fetchUserData();
@@ -144,7 +147,10 @@ const EditProfile = () => {
 
     const mainContent = (
         <div>
-            <Title>프로필 수정</Title>
+            <TopContainer>
+                <BackButton onClick={handleBack} /> 
+                <Title>프로필 수정</Title>
+            </TopContainer>
             <FormWrapper onSubmit={handleSubmit}>
                 <FormRow>
                     <Label htmlFor="userId">아이디</Label>

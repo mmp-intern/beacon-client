@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '../../components/layout/Layout';
 import UserProfileTableComponent from '../../components/table/UserProfileTable';
-import { Title, SubTitle, Divider, StyledNavLink } from '../../styles/common/Typography';
+import { Title, SubTitle, Divider, StyledNavLink, TopContainer, BackButton } from '../../styles/common/Typography';
 import { useParams, useNavigate } from 'react-router-dom'; 
 import apiClient from '../../apiClient';
 import DeleteButton from '../../components/Beaconbutton/DeleteButton'; 
@@ -43,6 +43,10 @@ const UserProfile = () => {
         navigate(`/profile/${userId}/edit`); 
     };
 
+    const handleBack = () => {
+        navigate(-1); 
+    };
+
     const leftContent = (
         <div>
             <SubTitle>관리자 메뉴</SubTitle>
@@ -80,7 +84,10 @@ const UserProfile = () => {
 
     const mainContent = (
         <div>
-            <Title>{title}</Title>
+            <TopContainer>
+                <BackButton onClick={handleBack} /> {/* BackButton 추가 */}
+                <Title>{title}</Title>
+            </TopContainer>
             <UserProfileTableComponent user={user} />
             {(authUser && (authUser.role === 'SUPER_ADMIN' || authUser.role === 'ADMIN')) && (
                 <ButtonContainer>
